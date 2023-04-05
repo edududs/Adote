@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'title' %}Seus pedidos de adoção{% endblock 'title' %}
+{% block 'content' %}
+{% include 'partials/_nav.html' %}
+<div class="container-fluid col-md-8">
+    <div class="row">
+
+        <div class="col-md">
+            <div class="wrapper">
+                <div class="box width80">
+                    {% if messages %}
+                        <br>
+                        {% for message in messages %}
+                            <div class="alert {{message.tags}}">
+                                {{message}}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <h3 class="font-vinho">Seus pets</h3>
+                    <hr>
+
+                     <table class="tabela" cellpadding="20">
+                        <tr>
+                            <th>Foto</th>
+                            <th>Nome</th>
+                            <th>Raça</th>
+                            <th>Status</th>
+                            <th>Remover</th>
+                        </tr>
+                            {% for pet in pets %}
+                              <tr class="tabela-linha">
+                                  <td width="20%">
+                                      <img width="40%" src="{{pet.foto.url}}">
+                                  </td>
+                                  <td>
+                                      {{pet.nome}}
+                                  </td>
+                                  <td>
+                                      {{pet.raca}}
+                                      
+                                  </td>
+                                  <td>
+                                    {% if pet.status == 'P' %}
+                                      <span class='badge text-bg-primary'>Para adoção</span>
+                                    {% elif pet.status == 'A'%}
+                                      <span class= 'badge text-bg-success'>Adotado</span>
+                                    {% endif %}
+                                    
+                                </td>
+                                <td>
+                                    <a href="{% url 'remover_pet' pet.id %}" class="btn btn-danger">REMOVER</a>
+                                </td>
+                            </tr>
+                            {% endfor %}                       
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock 'content' %}

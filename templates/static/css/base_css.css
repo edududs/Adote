@@ -1,0 +1,131 @@
+#estado.estado {
+  width: 15%;
+}
+
+.bg-side{
+  background-color: #391D34;
+  color: white;
+  min-height: 100vh;
+  height: auto;
+}
+
+.header{
+  border-bottom: 1px solid white;
+  padding: 20px;
+}
+
+.body-form{
+  padding: 20px;
+}
+
+.font-logo{
+  margin-left: 10px;
+  font-size: 40px;
+  
+}
+
+.btn-custom-primary{
+  background-color: #3D7B80;
+  border: none;
+  box-shadow: 2px 2px 5px 1px black;
+  color: white;
+  font-size: 20px;
+  padding: 5px 20px 5px 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+
+}
+
+.link-float{
+
+  text-decoration: none;
+  float: right;
+  margin: 20px;
+}
+
+.side-logo{
+  text-align: center;
+  margin-top: 60px;    
+}
+
+.sidebar li:last-child {
+  position: fixed;
+  bottom: 3%;
+  margin: auto;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  padding: 20px;
+}
+.wrapper {
+  margin-top: 3%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  padding: 20px;
+  width: 50vw;
+  background: rgb(238, 238, 238);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.font-vinho {
+  color: #a24d52;
+}
+
+.menu {
+  color: inherit;
+  text-decoration: none;
+}
+
+.width80{
+  width: 80vw; 
+}
+
+.tabela{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.tabela-linha{
+  background-color: #e8e7e7;
+}
+
+.btn-custom-secondary{
+  background-color: #762D77;
+  border: none;
+  box-shadow: 2px 2px 5px 1px rgb(108, 108, 108);
+  color: white;
+  font-size: 20px;
+  padding: 5px 20px 5px 20px;
+  border-radius: 10px;
+
+}
+
+.span-bold{
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.span-bold2{
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.badge-lg{
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.bg-side-plataforma{
+  background-color: #391D34;
+  color: white;
+}

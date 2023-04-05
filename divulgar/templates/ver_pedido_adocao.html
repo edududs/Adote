@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'title' %}Seus pedidos de adoção{% endblock 'title' %}
+{% block 'content' %}
+{% include 'partials/_nav.html' %}
+<div class="container-fluid col-md-8">
+    <div class="row">
+        
+
+        <div style="padding:60px" class="col-md">
+            <div class="row">
+                {% if messages %}
+                    <br>
+                    {% for message in messages %}
+                        <div class="alert {{message.tags}}">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% for pedido in pedidos %}
+                    <div class="col-md-3" style="margin-top: 20px;">
+                        <div class="card" style="background-color: #D6D6D6; border:none;">
+                            <div style="padding:10px">
+                                <span clas="span-bold">{{pedido.pet.nome}}</span>
+                            </div>
+                            <img class="card-img-top" src="{{pedido.pet.foto.url}}">
+                            <div class="card-body">
+                                <h1 class="card-title">{{pedido.usuario.username}}</h1>
+                                <span class="span-bold2">Telefone:</span>
+                                <p>{{pedido.pet.telefone}}</p>
+                                
+                                <span class="span-bold2">Cidade:</span>
+                                <p>{{pedido.pet.cidade}}</p>
+                                <a href="{% url 'processa_pedido_adocao' pedido.id %}?status=A" class="btn btn-success btn-lg">Aprovar</a>
+                                <a href="{% url 'processa_pedido_adocao' pedido.id %}?status=R" class="btn btn-danger btn-lg">Recusar</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                
+
+                
+                
+            </div>
+        </div>
+
+    </div>
+
+    
+
+
+</div>
+
+{% endblock 'content' %}

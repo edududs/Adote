@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'title' %}Ver Pets{% endblock 'title' %}
+{% block 'content' %}
+{% include 'partials/_nav.html' %}
+<div class="container-fluid col-md-8">
+    <div class="row">
+
+        <div class="col-md">
+            <div class="wrapper">
+                <div class="box width80">
+                    {% if messages %}
+                        <br>
+                        {% for message in messages %}
+                            <div class="alert {{message.tags}}">
+                                {{message}}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <h3 class="font-vinho">Pets para adoção</h3>
+                    <hr>
+                    <form action="{% url 'listar_pets' %}" method="GET">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="text" placeholder="Cidade..." value="{% if cidade %}{{cidade}}{% endif %}" name="cidade" class="form-control">
+                            </div>
+
+                            <div class="col-md-4">
+                                <select class="form-select" name="raca">
+                                    {% for raca in racas %}
+                                        <option {% if raca_filter.id == raca.id %} selected {% endif %} value="{{raca.id}}">{{raca}}</option>
+                                    {% endfor %}
+                                    
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="submit" class="btn-custom-secondary" value="FILTRAR">
+                            </div>
+                        </div>
+                    </form>
+
+                     <table class="tabela" cellpadding="20">
+                        <tr>
+                            <th>Foto</th>
+                            <th>Nome</th>
+                            <th>Raça</th>
+                            <th>Status</th>
+                            <th>Cidade</th>
+                        </tr>
+                        {% for pet in pets%}
+                            <tr class="tabela-linha">
+                                <td width="20%">
+                                    <a href="{% url 'ver_pet' pet.id %}"><img width="40%" src="{{pet.foto.url}}"></a>
+                                </td>
+                                <td>
+                                    {{pet.nome}}
+                                </td>
+                                <td>
+                                    {{pet.raca}}
+                                    
+                                </td>
+                                <td>
+                                    {% if pet.status == "P" %}
+                                        <span class="badge text-bg-primary">Para adoção</span>
+                                    {% elif pet.status == "A" %}
+                                        <span class="badge text-bg-success">Adotado</span>
+                                    {% endif%}
+
+                                   
+                                    
+                                </td>
+                                <td>
+                                    {{pet.cidade}}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock 'content' %}
