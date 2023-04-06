@@ -27,7 +27,7 @@ def novo_pet(request):
         descricao = request.POST.get('descricao')
         estado = request.POST.get('estado')
         cidade = request.POST.get('cidade')
-        telefone = request.POST.get('telefone')
+        tel = request.POST.get('tel')
         tags = request.POST.getlist('tags')
         raca = request.POST.get('raca')
 
@@ -38,7 +38,7 @@ def novo_pet(request):
             cidade=cidade,
             estado=estado,
             descricao=descricao,
-            telefone=telefone,
+            tel=tel,
             raca_id=raca
         )
 
@@ -71,6 +71,8 @@ def remover_pet(request, id):
         messages.add_message(request, constants.ERROR,
                              'Esse pet não é seu, espertinho hahaha')
         return redirect('/divulgar/seus_pets')
+    
+    print(pet)
 
     pet.delete()
 

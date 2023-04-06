@@ -7,19 +7,23 @@
                 <a class="nav-link text-white active" href="{% url 'listar_pets' %}">Adote</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white active" href="{% url 'seus_pets' %}">Seus pets</a>
+                <a class="nav-link text-white" href="{% url 'seus_pets' %}">Seus pets</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white active" href="{% url 'novo_pet' %}">Cadastrar pet</a>
+                <a class="nav-link text-white" href="{% url 'novo_pet' %}">Cadastrar pet</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white active" href="{% url 'ver_pedido_adocao' %}">Pedidos de adoção</a>
+                <a class="nav-link text-white" href="{% url 'ver_pedido_adocao' %}">Pedidos de adoção</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white active" href="{% url 'dashboard' %}">Dashboard</a>
+                <a class="nav-link text-white" href="{% url 'perfil' %}">Perfil do Usuário</a>
             </li>
             <li class="nav-item">
-                <p>{{usuario_logado}}</p>
+                <a class="nav-link text-white" href="{% url 'dashboard' %}">Dashboard</a>
+            </li>
+            </li>
+            <li class="nav-item">
+                <p>{{request.user.first_name}} {{request.user.last_name}}</p>
                 <a class="btn-custom-primary nav-link text-white active" href="{% url 'sair' %}">Sair</a>
             </li>
         </ul>

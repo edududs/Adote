@@ -1,11 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.password_validation import validate_password
 from django.contrib.messages import constants
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 
-from .models import Estado, User, ValidationsUser, Cidade
+from .models import Cidade, Estado, User, ValidationsUser
 
 # Create your views here.
 
@@ -17,7 +16,8 @@ def cadastro(request):
         estados = Estado.objects.all()
         cidades_por_estado = {}
         for estado in estados:
-            cidades_por_estado[estado.sigla] = Cidade.objects.filter(estado=estado).values_list('nome', flat=True)
+            cidades_por_estado[estado.sigla] = Cidade.objects.filter(
+                estado=estado).values_list('nome', flat=True)
 
         return render(request, 'cadastro.html', {'estados': estados, 'cidades_por_estado': cidades_por_estado})
 
@@ -29,9 +29,8 @@ def cadastro(request):
         confirmar_senha = request.POST.get('confirmar_senha').strip()
         last_name = request.POST.get('last_name').strip()
         tel = request.POST.get('tel').strip()
-        estado = request.POST.get('estado')
 
-        if any(len(campo) == 0 for campo in [nome, email, senha, confirmar_senha, last_name, usuario, tel, estado]):
+        if any(len(campo) == 0 for campo in [nome, email, senha, confirmar_senha, last_name, usuario, tel]):
             messages.add_message(request, constants.ERROR,
                                  'Preencha todos os campos!')
             return render(request, 'cadastro.html')
@@ -83,11 +82,12 @@ def logar(request):
             return render(request, 'login.html')
 
 
+def perfil(request):
+    if request.method != 'POST':
+        username = request.user.first_name + " " + request.user.last_name
+        return render(request, 'perfil.html', {'username':username})
+
+
 def sair(request):
     logout(request)
     return redirect('/auth/login')
-
-
-def get_nome_estado(estado):
-    sigla = estado[0]
-    return sigla
