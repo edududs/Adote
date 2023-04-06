@@ -12,7 +12,7 @@ class PedidoAdocao(models.Model):
         ('R', 'Recusado')
     )
 
-    pet = models.ForeignKey(Pet, on_delete=models.DO_NOTHING)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     data = models.DateTimeField()
     status = models.CharField(
