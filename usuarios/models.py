@@ -6,20 +6,11 @@ from django.db import models
 
 # Create your models here.
 class Estado(models.Model):
-    sigla = models.CharField(max_length=2)
-    nome = models.CharField(max_length=100)
+    sigla = models.CharField(max_length=2, unique=True)
+    nome = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.nome
-
-
-class Cidade(models.Model):
-    nome = models.CharField(('cidade'), max_length=100)
-    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.nome
-
 
 class ValidationsUser:
     def __init__(self, password, password2, email, username, tel):
@@ -53,6 +44,12 @@ class ValidationsUser:
 class User(AbstractUser, UserManager):
     email = models.EmailField(("email adress"), unique=True)
     tel = models.CharField(("phone"), unique=True, max_length=15)
+    cep = models.CharField(("cep"), max_length=8, blank=True)
+    bairro = models.CharField(("bairro"), max_length=100, blank=True)
+    cidade = models.CharField(("cidade"), max_length=100, blank=True)
+    uf = models.ForeignKey(Estado, to_field='nome', on_delete=models.DO_NOTHING)
+    descricao = models.TextField(("descricao"))
+    
 
     REQUIRED_FIELDS = ['first_name', 'email', 'tel']
 

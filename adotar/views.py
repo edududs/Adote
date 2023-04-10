@@ -6,6 +6,7 @@ from django.contrib.messages import constants
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.db.models import Subquery, OuterRef
 
 from divulgar.models import Pet, Raca
 
@@ -15,8 +16,8 @@ from .models import PedidoAdocao
 @login_required(login_url='login')
 def listar_pets(request):
     if request.method == 'GET':
-
-        pets = Pet.objects.filter(status='P')
+        pedidos_usuario = PedidoAdocao.objects.filter(usuario=request.user, status="AG").values('pet_id')
+        pets = Pet.objects.filter(status='P').exclude(id__in=Subquery(pedidos_usuario))
         racas = Raca.objects.all()
 
         cidade = request.GET.get('cidade')
@@ -27,6 +28,9 @@ def listar_pets(request):
 
         if raca_filter:
             pets = pets.filter(raca__id=raca_filter)
+            
+
+            
 
         return render(request, 'listar_pets.html', {'pets': pets, 'racas': racas, 'cidade': cidade})
 
@@ -39,7 +43,11 @@ def pedido_adocao(request, id_pet):
         messages.add_message(request, constants.WARNING,
                              'Este pet já foi adotado.')
         return redirect('/adotar')
-
+    
+    if PedidoAdocao.objects.filter(pet__id=id_pet, usuario=request.user).exists():
+        messages.add_message(request, constants.ERROR,
+                             'Você já fez um pedido de adoção para este pet!')
+        return redirect('/adotar')
     pedido = PedidoAdocao(pet=pet.first(),
                           usuario=request.user,
                           data=datetime.now())

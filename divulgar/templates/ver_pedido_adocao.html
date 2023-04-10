@@ -4,52 +4,94 @@
 {% block 'content' %}
 {% include 'partials/_nav.html' %}
 <div class="container-fluid col-md-8">
-    <div class="row">
-        
-
-        <div style="padding:60px" class="col-md">
-            <div class="row">
-                {% if messages %}
-                    <br>
-                    {% for message in messages %}
-                        <div class="alert {{message.tags}}">
-                            {{message}}
+    <div class="col-md-6">
+        <div style="padding:60px" class="col-md row">
+            <h2 class="font-vinho">Pedido de adoção dos seus pets:</h2>
+            {% if messages %}
+                <br>
+                {% for message in messages %}
+                    <div class="alert {{message.tags}}">
+                        {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% for pedido in pedidos %}
+                <div class="col-md-3" style="margin-top: 20px;">
+                    <div class="card" style="background-color: #D6D6D6; border:none;">
+                        <div style="padding:10px">
+                            <span clas="span-bold">{{pedido.pet.nome}}</span>
                         </div>
-                    {% endfor %}
-                {% endif %}
-                {% for pedido in pedidos %}
-                    <div class="col-md-3" style="margin-top: 20px;">
-                        <div class="card" style="background-color: #D6D6D6; border:none;">
-                            <div style="padding:10px">
-                                <span clas="span-bold">{{pedido.pet.nome}}</span>
+                        <img class="card-img-top" src="{{pedido.pet.foto.url}}">
+                        <div class="card-body">
+                            <div class="col-md">
+                                <h1 class="card-title">{{pedido.usuario.first_name}}</h1>
+                                <span class="span-bold2">Telefone de contato do pet:</span>
                             </div>
-                            <img class="card-img-top" src="{{pedido.pet.foto.url}}">
-                            <div class="card-body">
-                                <h1 class="card-title">{{pedido.usuario.username}}</h1>
-                                <span class="span-bold2">Telefone:</span>
-                                <p>{{pedido.pet.telefone}}</p>
-                                
-                                <span class="span-bold2">Cidade:</span>
-                                <p>{{pedido.pet.cidade}}</p>
-                                <a href="{% url 'processa_pedido_adocao' pedido.id %}?status=A" class="btn btn-success btn-lg">Aprovar</a>
-                                <a href="{% url 'processa_pedido_adocao' pedido.id %}?status=R" class="btn btn-danger btn-lg">Recusar</a>
+                                <p>{{pedido.pet.tel}}</p>
+                            <div class="col-md">
+                                <span class="span-bold2">Cidade do pet:</span>
+                            </div>
+                                <p>{{pedido.pet.cidade}} - {{pedido.pet.estado}}</p>
+                            <div class="col-md">
+                                <span class="span-bold2">Perfil do adotante:</span>
+                            </div>
+                            <div class="text-center pb-5 col-md-6">
+                                <a href="{% url 'perfil_adotante' pedido.id %}" class="badge text-bg-primary">{{pedido.usuario.username}}</a>
+                            </div>
+                            <div class="col-md mx-auto d-flex justify-content-center">
+                                <a href="{% url 'processa_pedido_adocao' pedido.id %}?status=A" class="btn btn-success flex-fill mx-1 btn-lg text-md text-wrap">Aprovar</a>
+                                <a href="{% url 'processa_pedido_adocao' pedido.id %}?status=R" class="btn btn-danger flex-fill mx-1 btn-lg text-md text-wrap">Recusar</a>
                             </div>
                         </div>
                     </div>
-                {% endfor %}
-
-                
-
-                
-                
-            </div>
+                </div>
+            {% endfor %}
         </div>
-
     </div>
-
-    
-
-
+    {% comment %} <div class="col-md-6">
+        <div style="padding:60px" class="col-md row">
+            <h2 class="font-vinho">Seus pedidos de adoção:</h2>
+            {% if messages %}
+                <br>
+                {% for message in messages %}
+                    <div class="alert {{message.tags}}">
+                        {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% for pedido_usuario in pedidos_usuario %}
+                <div class="col-md-3" style="margin-top: 20px;">
+                    <div class="card" style="background-color: #D6D6D6; border:none;">
+                        <div style="padding:10px">
+                            <span clas="span-bold">{{pedido.pet.nome}}</span>
+                        </div>
+                        <img class="card-img-top" src="{{pedido.pet.foto.url}}">
+                        <div class="card-body">
+                            <div class="col-md">
+                                <h1 class="card-title">{{pedido.usuario.first_name}}</h1>
+                                <span class="span-bold2">Telefone de contato do pet:</span>
+                            </div>
+                                <p>{{pedido.pet.tel}}</p>
+                            <div class="col-md">
+                                <span class="span-bold2">Cidade do pet:</span>
+                            </div>
+                                <p>{{pedido.pet.cidade}} - {{pedido.pet.estado}}</p>
+                            <div class="col-md">
+                                <span class="span-bold2">Perfil do adotante:</span>
+                            </div>
+                            <div class="text-center pb-5 col-md-6">
+                                <a href="{% url 'perfil_adotante' pedido.id %}" class="badge text-bg-primary">{{pedido.usuario.username}}</a>
+                            </div>
+                            <div class="col-md mx-auto d-flex justify-content-center">
+                                <a href="{% url 'processa_pedido_adocao' pedido.id %}?status=A" class="btn btn-success flex-fill mx-1 btn-lg text-md text-wrap">Aprovar</a>
+                                <a href="{% url 'processa_pedido_adocao' pedido.id %}?status=R" class="btn btn-danger flex-fill mx-1 btn-lg text-md text-wrap">Recusar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div> {% endcomment %}
 </div>
 
 {% endblock 'content' %}

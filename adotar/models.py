@@ -17,6 +17,7 @@ class PedidoAdocao(models.Model):
     data = models.DateTimeField()
     status = models.CharField(
         max_length=2, choices=choices_status, default='AG')
+    
 
     def __str__(self):
         return self.pet.nome

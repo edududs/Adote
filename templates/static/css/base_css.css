@@ -129,3 +129,9 @@
   background-color: #391D34;
   color: white;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
