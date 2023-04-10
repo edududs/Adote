@@ -4,7 +4,7 @@ from django.contrib.messages import constants
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 
-from .models import Cidade, Estado, User, ValidationsUser
+from .models import Estado, User, ValidationsUser
 
 # Create your views here.
 
@@ -14,26 +14,57 @@ def cadastro(request):
         return redirect('/divulgar/novo_pet')
     if request.method == "GET":
         estados = Estado.objects.all()
-        cidades_por_estado = {}
-        for estado in estados:
-            cidades_por_estado[estado.sigla] = Cidade.objects.filter(
-                estado=estado).values_list('nome', flat=True)
-
-        return render(request, 'cadastro.html', {'estados': estados, 'cidades_por_estado': cidades_por_estado})
+        return render(request, 'cadastro.html', {'estados': estados})
 
     elif request.method == "POST":
+        estados = Estado.objects.all()
+
         usuario = request.POST.get('usuario').strip()
         nome = request.POST.get('nome').strip()
         email = request.POST.get('email').strip()
         senha = request.POST.get('senha').strip()
         confirmar_senha = request.POST.get('confirmar_senha').strip()
         last_name = request.POST.get('last_name').strip()
+        descricao = request.POST.get('descricao')
         tel = request.POST.get('tel').strip()
+        cep = request.POST.get('cep').strip()
+        bairro = request.POST.get('bairro').strip()
+        cidade = request.POST.get('cidade').strip()
+        uf = request.POST.get('estado')
+        uf = Estado.objects.get(nome=uf)
 
-        if any(len(campo) == 0 for campo in [nome, email, senha, confirmar_senha, last_name, usuario, tel]):
+        cep = cep.replace("-", "").replace(" ", "").replace(".", "")
+        tel = tel.replace(
+            "-", "").replace("(", "").replace(")", "").replace(" ", "")
+        print(
+            f"cep: {cep}\ntel:{tel}\nbairro:{bairro}\ncidade:{cidade}\nuf:{uf}")
+        
+        if usuario == "admin":
+                user = User.objects.create_superuser(
+                    username=usuario,
+                    email=email,
+                    password=senha,
+                    first_name=nome,
+                    last_name=last_name,
+                    tel=tel,
+                    cep=cep,
+                    bairro=bairro,
+                    cidade=cidade,
+                    uf=uf,
+                    descricao=descricao,
+                )
+                messages.add_message(request, constants.SUCCESS,
+                                 'Seu cadastro foi efetuado!')
+                return render(request, 'login.html')
+        if not uf:
             messages.add_message(request, constants.ERROR,
-                                 'Preencha todos os campos!')
-            return render(request, 'cadastro.html')
+                                 'Estado não encontrado.')
+            return render(request, 'cadastro.html', {'estados': estados})
+
+        if any(len(campo) == 0 for campo in [nome, email, senha, confirmar_senha, usuario, tel, descricao]):
+            messages.add_message(request, constants.ERROR,
+                                 'Preencha todos os campos obrigatórios!')
+            return render(request, 'cadastro.html', {'estados': estados})
 
         try:
             validar = ValidationsUser(
@@ -42,7 +73,7 @@ def cadastro(request):
         except ValidationError as e:
             for error in e.messages:
                 messages.add_message(request, constants.ERROR, error)
-            return render(request, 'cadastro.html')
+            return render(request, 'cadastro.html', {'estados': estados})
 
         try:
             user = User.objects.create_user(
@@ -52,15 +83,21 @@ def cadastro(request):
                 first_name=nome,
                 last_name=last_name,
                 tel=tel,
+                cep=cep,
+                bairro=bairro,
+                cidade=cidade,
+                uf=uf,
+                descricao=descricao
             )
             messages.add_message(request, constants.SUCCESS,
                                  'Seu cadastro foi efetuado!')
             return render(request, 'login.html')
 
-        except:
+        except Exception as e:
+            print(e)
             messages.add_message(request, constants.ERROR,
                                  'Erro interno do sistema!')
-            return render(request, 'cadastro.html')
+            return render(request, 'cadastro.html', {'estados': estados})
 
 
 def logar(request):
@@ -85,7 +122,7 @@ def logar(request):
 def perfil(request):
     if request.method != 'POST':
         username = request.user.first_name + " " + request.user.last_name
-        return render(request, 'perfil.html', {'username':username})
+        return render(request, 'perfil.html', {'username': username})
 
 
 def sair(request):

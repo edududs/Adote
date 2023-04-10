@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block 'title' %}Perfil do usuário{% endblock 'title' %}
+{% block 'title' %}Perfil do adotante{% endblock 'title' %}
 {% block 'content' %}
 {% include 'partials/_nav.html' %}
 <div class="container-fluid col-md-8">
@@ -17,23 +17,32 @@
                         {% endfor %}
                     {% endif %}
                     <div style="padding:60px" class="col-md">
-                        <h2 class="font-vinho">Perfil do usuário</h2>
+                        <a href="#" onclick="window.history.back(); return false;" class="btn btn-secondary btn-sm mb-3"><i class="fa fa-arrow-left mr-1"></i></a>
+                        <h2 class="font-vinho">Perfil do usuário adotante</h2>
                         <hr>
                         <div class="row">
                             <div class="col-md">
                                 <h4>Nome:</h4>
-                                <p>{{username}}</p>
+                                <p>{{usuario_adotante.first_name}} {{usuario_adotante.last_name}}</p>
                                 <h4>Telefone:</h4>
-                                <p>{{request.user.tel}}</p>
+                                <p>{{usuario_adotante.tel}}</p>
                             </div>
                             <div class="col-md">
                                 <h4>Email:</h4>
-                                <p>{{request.user.email}}</p>
+                                <p>{{usuario_adotante.email}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md">
+                                <h4>Estado:</h4>
+                                <p>{{usuario_adotante.uf}}</p>
+                                <h4>Cidade:</h4>
+                                <p>{{usuario_adotante.cidade}}</p>
                             </div>
                         </div>
                             <div class="col-md-9">
                                 <h4>Descrição:</h4>
-                                <p>{{request.user.descricao}}</p>
+                                <p>{{usuario_adotante.descricao}}</p>
                             </div>
                     </div>
                 </div>

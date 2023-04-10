@@ -13,21 +13,21 @@
       </div>
 
       <div class="body-form">
-         {% if messages %}
+          {% if messages %}
             <br>
             {% for message in messages %}
                 <div class="alert {{message.tags}}">
                     {{message}}
                 </div>
             {% endfor %}  
-        {% endif %} 
+          {% endif %} 
         <h2>Cadastre-se</h2>
         <p>Seu cadastro salva vidas.</p>
         <hr />
         <form action="{% url 'cadastro' %}" method="POST">{% csrf_token %}
           <div class="row">
             <div class="col-md">
-              <label for="nome">Nome:</label>
+              <label for="nome">*Nome:</label>
               <input
                 type="text"
                 class="form-control"
@@ -50,7 +50,7 @@
             </div>
           </div>
           <br>
-          <label for="usuario">Usuário:</label>
+          <label for="usuario">*Usuário:</label>
           <input
             type="text"
             class="form-control"
@@ -60,7 +60,7 @@
             value= "{{ request.POST.usuario }}"
           />
           <br />
-          <label for="email">E-mail:</label>
+          <label for="email">*E-mail:</label>
           <input
             type="email"
             class="form-control"
@@ -70,7 +70,7 @@
             value= "{{ request.POST.email }}"
           />
           <br />
-          <label for="tel">Telefone:</label>
+          <label for="tel">*Telefone:</label>
           <input
             type="text"
             class="form-control"
@@ -81,44 +81,65 @@
           />
           <br />
           <div class="row">
-            <div class="col-md">
-              <label for="estado">Estado:</label>
+            <div class="col-md-3">
+              <label for="cep">Cep:</label>
+              <input 
+                  type="text"
+                  class="form-control"
+                  placeholder="Digite seu cep"
+                  name="cep"
+                  id="cep"
+                  value="{{request.POST.cep}}"
+              />
+            </div>
+            <div class="col-md-2">
+              <label for="estado">*Estado:</label>
               <select
                 class="form-select estado-select"
                 name="estado"
                 id="estado"
-              >
+              />
               {% for estado in estados %}
                 <option value="{{ estado.nome }}">{{ estado.sigla }}</option>
               {% endfor %}
               </select>
             </div>
-            {% comment %} <div class="col-md">
+            <div class="col-md">
               <label for="cidade">Cidade:</label>
-              <select
-                class="form-select cidade-select"
-                name="cidade"
-                id="cidade"
-              >
-               <option value="">Escolha um estado primeiro</option>
-              </select>
-            </div> {% endcomment %}
+              <input 
+                  type="text"
+                  class="form-control"
+                  placeholder="Digite sua cidade"
+                  name="cidade"
+                  id="cidade"
+              />
+            </div>
+            <div class="col-md">
+              <label for="bairro">Bairro:</label>
+              <input 
+                  type="text"
+                  class="form-control"
+                  placeholder="Digite seu bairro"
+                  name="bairro"
+                  id="bairro"
+              />
+            </div>
           </div>
           <br>
           <div class="row">
             <div class="col-md">
-              <label for="senha">Senha</label>
+              <label for="senha">*Senha</label>
               <input
                 type="password"
                 class="form-control"
-                placeholder="Digite sua senha..."
+                placeholder="Digite sua senha"
                 name="senha"
                 id="senha"
               />
             </div>
 
             <div class="col-md">
-              <label for="confirmar_senha">Confirmar senha:</label>
+              <label for="confirmar_senha">*Confirmar senha:</label>
               <input
                 type="password"
                 class="form-control"
@@ -127,6 +148,11 @@
                 id="confirmar_senha"
               />
             </div>
+          </div>
+          <br>
+          <div class="col-md">
+            <label for="descricao">*Fale um pouco sobre você:</label>
+            <textarea class="form-control" name="descricao" placeholder="Conte um pouco sobre quem você é">{{request.POST.descricao}}</textarea>
           </div>
 
           <input type="submit" value="SALVAR" class="btn-custom-primary" />
@@ -149,22 +175,6 @@
     </div>
   </div>
 </div>
-{% comment %} <script>
-  const cidadesPorEstado = {{ cidades_por_estado|safe }};
-  const cidadeSelect = document.querySelector('.cidade-select');
-  const estadoSelect = document.querySelector('.estado-select');
-
-  estadoSelect.addEventListener('change', (event) => {
-    const siglaEstado = event.target.value;
-    const cidades = cidadesPorEstado[siglaEstado];
-    cidadeSelect.innerHTML = '';
-    cidades.forEach((cidade) => {
-      const option = document.createElement('option');
-      option.value = cidade;
-      option.textContent = cidade;
-      cidadeSelect.appendChild(option);
-    });
-  });
-</script> {% endcomment %}
+<script src="{% static 'js/busca_cep.js' %}"></script>
 {% endblock 'content' %}
 

@@ -22,42 +22,77 @@
                                     </div>
                                 {% endfor %}
                             {% endif %}
-                            <input type="file" name="foto" class="form-control">
-                            <br>
-                            <span>Nome:<span>
-                                <input type="text" class="form-control" name="nome" placeholder="Digite o nome do pet...">
+                            <div class="col-md">
+                                <label for="foto">Foto do pet:</label>
+                                <input type="file" name="foto" class="form-control">
                                 <br>
-                                <span>Descrição:<span>
+                            </div>
+                            <div class="col-md">
+                                <label for="nome">Nome:</label>
+                                <input type="text" class="form-control" name="nome" placeholder="Digite o nome do pet...">
+                            </div>
+                            <div class="col-md">
+                                <label for="sexo">Sexo:</label>
+                                <select
+                                    class="form-select"
+                                    name="sexo"
+                                    id="sexo"
+                                    >
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Feminino</option>
+                                </select>
+                                <br>
+                            </div>
+                            </div>
+                            
+                            <div class="col-md">
+                                <label for="descricao">Descrição:</label>
                                     <textarea class="form-control" name="descricao" placeholder="Descrição..."></textarea>
                                     <br>
-                                    <div class="row">
-                                        <div class="col-md">
-                                            <span>Estado:</span>
-                                            <input type="text" placeholder="Digite o estado do pet..." name="estado" class="form-control">
-                                        </div>
-                                        
-                                        <div class="col-md">
-                                            <span>Cidade:</span>
-                                            <input type="text" placeholder="Digite a cidade do pet..." name="cidade" class="form-control">
-                                        </div>
-                                    </div>
-                                    <br>
-                            <span>Telefone para contato:</span>
-                            <input type="text" placeholder="Digite o seu telefone..." name="tel" class="form-control">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="estado">Estado:</label>
+                                    <select
+                                    class="form-select estado-select"
+                                    name="estado"
+                                    id="estado"
+                                    />
+                                    {% for estado in estados %}
+                                    <option value="{{ estado.nome }}">{{ estado.sigla }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                
+                            <div class="col-md-7">
+                                <span>Cidade:</span>
+                                <input type="text" placeholder="Digite a cidade do pet" name="cidade" class="form-control">
+                            </div>
+                            </div>
                             <br>
-                            <span>Tags:</span>
-                            <select name="tags" multiple class="form-select js-example-basic-multiple select2">
-                                {% for tag in tags %}
-                                <option value='{{tag.id}}'>{{tag}}</option>
-                                {% endfor %}    
-                            </select>
+                            <div class="col-md-5">
+                                <label for="tel">Telefone para contato referente a este pet:</label>
+                                <input type="text" placeholder="Digite o telefone do pet" name="tel" class="form-control">
+                            </div>       
                             <br>
-                        </span>Raça:</span>
-                        <select name="raca" class="form-select">
-                            {% for raca in racas %}
-                            <option value="{{raca.id}}">{{raca}}</option>  # Busca as classes criadas e todos os objetos dentro delas no DB
-                            {% endfor %}
-                        </select>
+                            <div class="col-md-5">
+                                <label for="tags">Tags:</label>
+                                <select name="tags" multiple class="form-select js-example-basic-multiple select2">
+                                    {% for tag in tags %}
+                                    <option value='{{tag.id}}'>{{tag}}</option>
+                                    {% endfor %}    
+                                </select>
+                            </div>
+                            <br>
+                            <div class="col-md-6">
+                                <label for="raca">Raça:</label>
+                                <select name="raca" class="form-select">
+                                    {% for raca in racas %}
+                                    <option value="{{raca.id}}">{{raca}}</option>  # Busca as classes criadas e todos os objetos dentro delas no DB
+                                    {% endfor %}
+                                </select>
+                            </div>
                         <input type="submit" value="ENVIAR" class="btn-custom-primary">
                         </form>
                     </div>

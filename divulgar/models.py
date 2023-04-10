@@ -19,6 +19,8 @@ class Tag(models.Model):
 class Pet(models.Model):
   choice_status = (('P', 'Para adoção'),
                    ('A', 'Adotado'))
+  choices_sexo = (('M', 'Masculino'),
+                  ('F', 'Feminino'))
 
   usuario = models.ForeignKey(User, on_delete=models.DO_NOTHING)
   foto = models.ImageField(upload_to='fotos_pets')
@@ -30,7 +32,7 @@ class Pet(models.Model):
   tags = models.ManyToManyField(Tag)
   raca = models.ForeignKey(Raca, on_delete=models.DO_NOTHING)
   status = models.CharField(max_length=1, choices=choice_status, default='P')
+  sexo = models.CharField(max_length=1, choices=choices_sexo)
 
   def __str__(self):
       return self.nome
-  

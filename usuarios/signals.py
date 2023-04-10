@@ -1,8 +1,7 @@
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
-from pyUFbr.baseuf import ufbr
 
-from .models import Estado, Cidade
+from .models import Estado
 
 
 @receiver(post_migrate)
@@ -37,12 +36,3 @@ def inserir_estados(sender, **kwargs):
                    ('TO', 'Tocantins'))
         for sigla, estado in estados:
             Estado.objects.create(sigla=sigla, nome=estado)
-
-@receiver(post_migrate)
-def inserir_cidades_ufbr(sender, **kwargs):
-    if Cidade.objects.count() == 0:
-        lista_cidades_estados = [(estado, cidade) for estado in ufbr.list_uf for cidade in ufbr.list_cidades(estado)]
-        for estado, cidade in lista_cidades_estados:
-            print(f"Inserindo cidade {cidade} do estado {estado}")
-            estado_obj = Estado.objects.get(sigla=estado)
-            Cidade.objects.create(estado=estado_obj, nome=cidade)
