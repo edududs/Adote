@@ -4,23 +4,23 @@
 {% include "partials/ui.html#page-header" with eyebrow="Quero divulgar" title="Pedidos recebidos" subtitle="Leia quem quer adotar e escolha a melhor família. Cada pessoa recebe um e-mail com a sua resposta." %}
 
 {% partialdef request-card %}
-<li class="card flex flex-col overflow-hidden sm:flex-row">
-  <a href="{% url 'adoption:pet' item.pet.id %}" class="relative block shrink-0 bg-plum-50 sm:w-40">
-    <img class="pet-photo aspect-[4/3] w-full object-cover sm:aspect-auto sm:h-full" src="{{ item.pet.photo.url }}" alt="" loading="lazy">
-    <span class="overlay-chip absolute bottom-2 left-2">{{ item.pet.name }}</span>
+<li class="card flex overflow-hidden">
+  <a href="{% url 'adoption:pet' item.pet.id %}" class="relative m-4 mr-0 block size-20 shrink-0 self-start overflow-hidden rounded-xl bg-plum-50 sm:m-0 sm:h-auto sm:w-40 sm:self-stretch sm:rounded-none">
+    <img class="pet-photo h-full w-full object-cover" src="{{ item.pet.photo.url }}" alt="" loading="lazy">
+    <span class="overlay-chip absolute bottom-2 left-2 max-sm:hidden">{{ item.pet.name }}</span>
   </a>
-  <div class="flex flex-1 flex-col p-5">
+  <div class="flex min-w-0 flex-1 flex-col p-4 sm:p-5">
     <div class="flex items-start gap-3">
-      {% include "partials/ui.html#avatar" with person=item.adopter %}
+      <span class="max-sm:hidden">{% include "partials/ui.html#avatar" with person=item.adopter %}</span>
       <div class="min-w-0 flex-1">
-        <a class="font-semibold text-plum-900" href="{% url 'adoption:adopter' item.id %}">{{ item.adopter.get_full_name|default:item.adopter.username }}</a>
+        <a class="font-semibold break-words text-plum-900" href="{% url 'adoption:adopter' item.id %}">{{ item.adopter.get_full_name|default:item.adopter.username }}</a>
         <p class="text-xs text-ink-muted">quer adotar {{ item.pet.name }} · {{ item.requested_at|date:"d/m H:i" }}</p>
         <div class="mt-2">{% include "partials/ui.html#status" with status=item.status %}</div>
       </div>
     </div>
     {% if item.message %}<p class="bubble mt-3">{{ item.message|linebreaksbr }}</p>{% endif %}
     {% if item.status == "pending" %}
-    <div class="mt-4 flex flex-wrap gap-2 sm:mt-auto sm:pt-4">
+    <div class="mt-3 flex flex-wrap gap-2 sm:mt-auto sm:pt-4">
       <form method="post" action="{% url 'adoption:approve' item.id %}" data-confirm="Os outros pedidos para {{ item.pet.name }} serão recusados, e cada pessoa recebe um e-mail." data-confirm-title="Aprovar o pedido de {{ item.adopter.first_name|default:item.adopter.username }}?" data-confirm-action="Aprovar pedido" data-confirm-tone="primary">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-check" aria-hidden="true"></i>Aprovar</button>

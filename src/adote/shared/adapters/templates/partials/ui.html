@@ -14,7 +14,7 @@ Small reusable pieces, as Django 6 template partials. Use with
     <h1 class="page-title">{{ title }}</h1>
     {% if subtitle %}<p class="page-subtitle">{{ subtitle }}</p>{% endif %}
   </div>
-  {% if action_url %}<a class="btn btn-primary" href="{{ action_url }}"><i class="fa-solid {{ action_icon|default:'fa-plus' }}" aria-hidden="true"></i>{{ action_label }}</a>{% endif %}
+  {% if action_url %}<a class="btn btn-primary {{ action_class }}" href="{{ action_url }}"><i class="fa-solid {{ action_icon|default:'fa-plus' }}" aria-hidden="true"></i>{{ action_label }}</a>{% endif %}
 </header>
 {% endpartialdef %}
 

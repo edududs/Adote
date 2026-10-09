@@ -48,7 +48,7 @@ class Screen:
     who: str  # a demo username, or "" for someone signed out
     path: str
     explanation: str
-    mobile: bool = False
+    mobile: bool = True  # every screen is also shot on a phone
     before: Callable[[Page], None] | None = field(default=None, compare=False)
 
 
@@ -67,7 +67,6 @@ def screens(ids: dict[str, dict[str, str]]) -> list[Screen]:
             "/conta/entrar/",
             "Porta de entrada. Ver pets exige conta, para que telefones e cidades não fiquem abertos "
             "para robôs.",
-            mobile=True,
         ),
         Screen(
             "02-signup",
@@ -93,29 +92,30 @@ def screens(ids: dict[str, dict[str, str]]) -> list[Screen]:
             "carla",
             "/",
             "O mural para quem quer adotar. Não mostra os pets da própria pessoa nem os já adotados; "
-            'o selo "Você já pediu" marca os pets com pedido seu em aberto.',
-            mobile=True,
+            'o selo "Você já pediu" marca os pets com pedido em aberto da pessoa. Os cards entram em '
+            "sequência e sobem ao passar o mouse.",
         ),
         Screen(
             "05-board-filtered",
             "Mural filtrado",
             "carla",
             "/?species=dog&state=DF",
-            "Filtros por espécie, raça, sexo, estado, cidade e característica, combináveis e guardados "
-            "na URL. Filtro inválido nunca dá erro: só deixa de filtrar.",
+            "Abas por espécie e filtros por raça, sexo, estado, cidade e característica, combináveis e "
+            "guardados na URL. Filtro inválido nunca dá erro: só deixa de filtrar. No celular os filtros "
+            'ficam recolhidos em "Mais filtros", com a contagem dos ativos.',
         ),
         Screen(
             "06-pet-request",
             "Página do pet: pedir para adotar",
             "carla",
             f"/pets/{pet['Luna']}/",
-            "Quem ainda não pediu vê a descrição, as características e o formulário do pedido, com uma "
-            "mensagem para quem divulgou. O telefone de quem divulgou não aparece.",
-            mobile=True,
+            "Quem ainda não pediu vê a descrição, as características e o painel do pedido, com uma "
+            "mensagem para quem divulgou. O telefone de quem divulgou não aparece. No celular, uma barra "
+            'fixa "Quero adotar" leva ao painel e some quando ele está na tela.',
         ),
         Screen(
             "07-pet-pending",
-            "Página do pet: pedido em aberto",
+            "Página do pet: pedido pendente",
             "carla",
             f"/pets/{pet['Thor']}/",
             "Com o pedido aguardando resposta, a página mostra a situação e permite cancelar.",
@@ -126,7 +126,7 @@ def screens(ids: dict[str, dict[str, str]]) -> list[Screen]:
             "carla",
             f"/pets/{pet['Pipoca']}/",
             "Depois da aprovação, e só para o adotante aprovado, aparece o telefone de quem divulgou, "
-            "com link de WhatsApp quando é celular.",
+            "com um botão de WhatsApp quando é celular. O painel comemora com uma chuva de patinhas.",
         ),
         Screen(
             "09-sent",
@@ -165,9 +165,9 @@ def screens(ids: dict[str, dict[str, str]]) -> list[Screen]:
             "Pedidos recebidos",
             "ana",
             "/pedidos/recebidos/",
-            "Os pedidos para os pets da pessoa, pendentes primeiro e os mais antigos antes. Aprovar um "
-            "recusa os outros pendentes do mesmo pet, e cada interessado recebe um e-mail.",
-            mobile=True,
+            "Os pedidos para os pets da pessoa, separados entre os que aguardam resposta e os já "
+            "respondidos, com a mensagem de cada interessado. Aprovar pede confirmação, recusa os outros "
+            "pendentes do mesmo pet, e cada interessado recebe um e-mail.",
         ),
         Screen(
             "14-adopter",
@@ -191,7 +191,6 @@ def screens(ids: dict[str, dict[str, str]]) -> list[Screen]:
             "/painel/",
             "Totais da plataforma (divulgados, esperando um lar, adotados, pedidos em aberto) e as "
             "adoções por raça, numa consulta só.",
-            mobile=True,
         ),
         Screen(
             "17-profile",
@@ -317,7 +316,7 @@ def capture(browser: Browser, base: str, screen: Screen, viewport: dict[str, int
         "document.querySelectorAll('img[loading=lazy]').forEach((img) => { img.loading = 'eager'; })"
     )
     page.wait_for_function("Array.from(document.images).every((img) => img.complete)")
-    page.wait_for_timeout(400)  # the chart animates in
+    page.wait_for_timeout(2500 if "painel" in screen.path else 400)  # the chart animates after its card
     png = OUT / name
     page.screenshot(path=png, full_page=True)
     page.close()
@@ -335,8 +334,7 @@ def write_readme(items: list[Screen]) -> None:
         "",
         "Uma imagem por tela e por situação, com a semente de demonstração (`manage.py seed_demo`).",
         "**Gerado** por `uv run poe screens` ([scripts/screens.py](../../scripts/screens.py)):",
-        "não edite à mão; mude o script e rode de novo. Desktop em 1280 px de largura; algumas telas",
-        "também em celular (390 px).",
+        "não é editado à mão. Cada tela aparece em computador (1280 px de largura) e em celular (390 px).",
         "",
         "Na semente, Ana divulgou Thor, Mel e Bidu; Bruno divulgou Luna e Pipoca. Bruno e Carla pediram",
         "Thor (pendentes), Ana pediu Luna (pendente), Carla teve Pipoca aprovada e Bruno teve Bidu recusado.",

@@ -260,6 +260,17 @@
     @apply absolute inset-0 size-full object-cover motion-safe:animate-fade-in;
   }
 
+  /* Segmented tabs (species on the board) */
+  .tab {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-3 text-sm font-semibold text-plum-900 no-underline shadow-soft transition hover:border-plum-200 hover:bg-plum-50 hover:text-plum-900 sm:px-5;
+  }
+  .tab[aria-current="page"] {
+    @apply border-plum-900 bg-plum-900 text-white hover:bg-plum-900 hover:text-white;
+  }
+  .tab[aria-current="page"] i {
+    @apply text-honey-400;
+  }
+
   /* Badges and chips */
   .badge {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap;
@@ -338,7 +349,10 @@
 
   /* Lists of rows (my pets, sent requests) */
   .list-row {
-    @apply flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:p-5;
+    @apply grid grid-cols-[4.5rem_minmax(0,1fr)] items-center gap-x-4 gap-y-3 p-4 sm:flex sm:p-5;
+  }
+  .list-row > :last-child {
+    @apply col-span-2 sm:col-span-1;
   }
   .list-row + .list-row {
     @apply border-t border-line;
