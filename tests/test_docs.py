@@ -44,3 +44,15 @@ def test_the_changelog_is_the_generated_one() -> None:
     changelog = (REPO / "CHANGELOG.md").read_text(encoding="utf-8")
     assert changelog.startswith("# Changelog")
     assert "Gerado pelo git-cliff" in changelog
+
+
+def test_every_screen_picture_is_explained_and_every_explained_picture_exists() -> None:
+    screens = REPO / "docs" / "screens"
+    readme = (screens / "README.md").read_text(encoding="utf-8")
+    pictures = {path.relative_to(screens).as_posix() for path in screens.glob("*/*.webp")}
+    referenced = set(re.findall(r"(?:\]\(|src=\")((?:desktop|mobile)/[^)\"]+\.webp)", readme))
+    assert pictures
+    assert pictures == referenced
+    assert len(re.findall(r"^## \d+\. ", readme, flags=re.MULTILINE)) == len(
+        list(screens.glob("desktop/*.webp"))
+    )

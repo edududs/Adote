@@ -74,3 +74,4 @@ Decisão não se edita: cria-se outra e marca-se a antiga como `substituída por
 | D-053 | Piso de cobertura de 95% | decidido | |
 | D-054 | SemVer; changelog e notas geradas pelo git-cliff a partir de Conventional Commits; release local, publicação por tag | decidido | [0010](0010-versioning.md) |
 | D-055 | Commits em Conventional Commits, sem trailers | decidido | |
+| D-056 | Prints de todas as telas em `docs/screens/`, gerados por script (Playwright sobre a aplicação em modo produção com a semente de demonstração), em WebP; nunca tirados à mão | decidido | |

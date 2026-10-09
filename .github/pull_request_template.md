@@ -13,4 +13,4 @@
 - [ ] Decisão nova registrada em `docs/decisions/README.md`
 - [ ] Documento afetado atualizado no mesmo PR (`docs/domain/`, `docs/architecture.md`...)
 
-<!-- Mudança de tela: anexe um print. -->
+- [ ] Mudança de tela: prints regenerados com `uv run poe screens`

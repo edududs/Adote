@@ -30,6 +30,15 @@ cada pet tem uma página, cada interessado faz um pedido com uma mensagem, e a d
 
 As regras completas, com o vocabulário de cada parte, estão em [docs/domain/](docs/domain/).
 
+| Mural | Página do pet |
+|---|---|
+| ![Mural de pets](docs/screens/desktop/04-board.webp) | ![Pedir para adotar](docs/screens/desktop/06-pet-request.webp) |
+| **Pedidos recebidos** | **Painel** |
+| ![Pedidos recebidos](docs/screens/desktop/13-received.webp) | ![Painel](docs/screens/desktop/16-dashboard.webp) |
+
+Todas as telas, em cada situação e também no celular, com a explicação de cada uma:
+[docs/screens/](docs/screens/README.md).
+
 ## Arquitetura
 
 ```mermaid

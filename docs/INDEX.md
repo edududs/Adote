@@ -18,6 +18,7 @@ Uma linha por documento. Abra só o que a tarefa pede.
 | [domain/accounts.md](domain/accounts.md) | Glossário e invariantes de contas. | Idem |
 | [domain/pets.md](domain/pets.md) | Glossário e invariantes de pets. | Idem |
 | [domain/adoption.md](domain/adoption.md) | Glossário, ciclo de vida e invariantes da adoção. | Idem |
+| [screens/README.md](screens/README.md) | Uma imagem por tela e por situação, com quem está vendo, a rota e a explicação. **Gerado** por `uv run poe screens`, não se edita. | A cada mudança de tela |
 | [runbooks/release.md](runbooks/release.md) | Como cortar e publicar uma versão. | O ritual muda |
 | [runbooks/deploy.md](runbooks/deploy.md) | Como colocar no ar e operar. | O procedimento muda |
 

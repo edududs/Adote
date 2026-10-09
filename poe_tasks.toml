@@ -53,6 +53,10 @@ help = "Create the local database and load the demonstration seed"
 sequence = [{ cmd = "python manage.py migrate" }, { cmd = "python manage.py seed_demo" }]
 env = { DJANGO_DEBUG.default = "1" }
 
+[tasks.screens]
+help = "Regenerate docs/screens/ (pictures and README) from the demo seed. ADOTE_CHROMIUM picks the browser"
+cmd = "python scripts/screens.py"
+
 [tasks.hooks]
 help = "Point git at the versioned hooks"
 cmd = "git config core.hooksPath .githooks"

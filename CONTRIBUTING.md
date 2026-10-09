@@ -43,7 +43,8 @@ deve descrever a mudança para quem lê o changelog. Sem trailers: o hook `commi
 ## Pull requests
 
 Um assunto por PR, com o portão verde. O template de PR pede o que mudou, por quê e como foi
-verificado. Mudança visível na tela leva print.
+verificado. Mudança visível na tela regenera os prints no mesmo PR: `uv run poe screens`
+(precisa de um Chromium; `ADOTE_CHROMIUM` aponta um já instalado).
 
 ## Versões
 

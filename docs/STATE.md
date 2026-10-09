@@ -12,7 +12,8 @@ seção "Não lançado" no changelog):
 - falhas de segurança da versão antiga fechadas (ver o commit `refactor!` e [security.md](security.md));
 - 210+ testes, cobertura de 98%, máquina de estados do Hypothesis contra o banco real, suíte
   repetida em Postgres no CI;
-- documentação, processo de versão e CI.
+- documentação, processo de versão e CI;
+- prints de todas as telas em [screens/](screens/README.md), gerados por `uv run poe screens`.
 
 ## Próximo passo
 
