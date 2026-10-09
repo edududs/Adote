@@ -8,8 +8,7 @@ import logging
 
 from django.conf import settings
 from django.core.mail import send_mail
-
-from adote.shared.adapters.compat import task
+from django.tasks import task
 
 logger = logging.getLogger(__name__)
 

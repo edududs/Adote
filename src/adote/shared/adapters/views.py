@@ -1,10 +1,10 @@
+from django.contrib.auth.decorators import login_not_required
 from django.db import connection
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
 from adote import __version__
-from adote.shared.adapters.compat import login_not_required
 
 
 @login_not_required

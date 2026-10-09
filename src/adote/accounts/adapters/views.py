@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
@@ -7,7 +8,6 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 
 from adote.accounts.domain import AccountError, EmailTakenError, PhoneTakenError, UsernameTakenError
-from adote.shared.adapters.compat import login_not_required
 
 from .composition import register_account, update_profile
 from .forms import LoginForm, PasswordForm, ProfileForm, SignUpForm
