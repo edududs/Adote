@@ -185,3 +185,19 @@ def test_the_catalog_seed_is_idempotent_and_reversible() -> None:
     assert not Tag.objects.exists()
     migration.seed(apps, None)
     assert (Breed.objects.count(), Tag.objects.count()) == counts
+
+
+@given(st.sampled_from(["61999998888", "6133334444", "", "123", "abc"]))
+def test_the_phone_filter_formats_valid_numbers_and_keeps_the_rest(digits: str) -> None:
+    from adote.shared.adapters.templatetags.adote import phone  # noqa: PLC0415
+
+    shown = phone(digits)
+    assert shown in {"(61) 99999-8888", "(61) 3333-4444"} if len(digits) >= 10 else shown == digits
+
+
+@pytest.mark.django_db
+def test_profiles_show_the_phone_formatted(user_factory: Callable[..., User]) -> None:
+    user = user_factory(phone="11987654321")
+    page = signed_in(user).get(reverse("accounts:profile")).content.decode()
+    assert "(11) 98765-4321" in page
+    assert "11987654321" not in page

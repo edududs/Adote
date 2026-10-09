@@ -1,7 +1,8 @@
+{% load adote %}
 <dl class="row mb-0">
   <dt class="col-sm-3">Nome</dt><dd class="col-sm-9">{{ person.get_full_name|default:person.username }}</dd>
   <dt class="col-sm-3">E-mail</dt><dd class="col-sm-9">{{ person.email }}</dd>
-  <dt class="col-sm-3">Telefone</dt><dd class="col-sm-9">{{ person.phone|default:"—" }}</dd>
+  <dt class="col-sm-3">Telefone</dt><dd class="col-sm-9">{{ person.phone|phone|default:"—" }}</dd>
   <dt class="col-sm-3">Cidade</dt><dd class="col-sm-9">{{ person.city|default:"—" }}{% if person.state %} - {{ person.state }}{% endif %}</dd>
   <dt class="col-sm-3">Bairro</dt><dd class="col-sm-9">{{ person.neighborhood|default:"—" }}</dd>
   <dt class="col-sm-3">Sobre</dt><dd class="col-sm-9">{{ person.about|default:"—"|linebreaksbr }}</dd>

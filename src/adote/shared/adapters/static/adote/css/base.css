@@ -11,10 +11,14 @@
   color: #fff;
 }
 
-.sidebar {
-  min-height: 100vh;
-  position: sticky;
-  top: 0;
+/* Full-height sticky menu on a wide screen; on a phone it sits on top of the page and scrolls away. */
+@media (min-width: 768px) {
+  .sidebar {
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+  }
 }
 
 .sidebar .nav-link.active {
@@ -96,4 +100,13 @@
 .chart-box {
   position: relative;
   max-width: 900px;
+}
+
+/* Help and error text on the dark auth panel: Bootstrap's defaults are too dark to read on plum. */
+.bg-side .form-text {
+  color: rgb(255 255 255 / 75%);
+}
+
+.bg-side .invalid-feedback {
+  color: #ffc2c6;
 }
