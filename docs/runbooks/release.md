@@ -5,7 +5,7 @@ publicar é empurrar a tag.
 
 ## Passos
 
-1. Esteja em `master`, atualizado, com a árvore limpa e o CI verde no último commit.
+1. Esteja em `main`, atualizado, com a árvore limpa e o CI verde no último commit.
 2. Veja o que sai:
 
    ```sh

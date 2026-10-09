@@ -19,7 +19,7 @@ dependencies = [
 
 [project.urls]
 Repository = "https://github.com/edududs/Adote"
-Changelog = "https://github.com/edududs/Adote/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/edududs/Adote/blob/main/CHANGELOG.md"
 Issues = "https://github.com/edududs/Adote/issues"
 
 [build-system]

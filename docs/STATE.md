@@ -16,7 +16,7 @@ seção "Não lançado" no changelog):
 
 ## Próximo passo
 
-1. Revisar e fazer o merge do PR da reescrita em `master`.
+1. Revisar e fazer o merge do PR da reescrita em `main` e tornar `main` a branch padrão do GitHub.
 2. Cortar a `v0.1.0`: `uv run poe release --dry-run`, depois `uv run poe release` e
    `git push --follow-tags` ([runbooks/release.md](runbooks/release.md)).
 3. Escolher onde hospedar e seguir [runbooks/deploy.md](runbooks/deploy.md).

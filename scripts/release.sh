@@ -18,7 +18,7 @@ dry_run=0
 
 cliff=(uv run --quiet git-cliff)
 "${cliff[@]}" --version >/dev/null 2>&1 || die "git-cliff is missing: run uv sync"
-[[ "$(git branch --show-current)" == "master" ]] || die "releases are cut from master"
+[[ "$(git branch --show-current)" == "main" ]] || die "releases are cut from main"
 [[ -z "$(git status --porcelain)" ]] || die "the working tree is not clean"
 
 last="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"

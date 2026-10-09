@@ -17,6 +17,7 @@ Decisão não se edita: cria-se outra e marca-se a antiga como `substituída por
 | D-005 | Python 3.14, Django 6, uv, ruff com todas as regras, pyright estrito, tarefas no poe | decidido | |
 | D-006 | Renderização no servidor com Bootstrap; sem SPA. O único JSON é o do gráfico do painel | decidido | |
 | D-007 | Licença MIT, como os outros projetos do autor | decidido | |
+| D-008 | A branch padrão é `main`; `master` deixa de existir depois do merge da reescrita | decidido | |
 
 ## Adoção
 
