@@ -26,6 +26,7 @@ class User(AbstractUser):
         verbose_name = "usuário"
         verbose_name_plural = "usuários"
         constraints = [
+            models.UniqueConstraint(Lower("username"), name="accounts_user_username_ci_unique"),
             models.UniqueConstraint(Lower("email"), name="accounts_user_email_ci_unique"),
             models.UniqueConstraint(
                 fields=["phone"], condition=~models.Q(phone=""), name="accounts_user_phone_unique"

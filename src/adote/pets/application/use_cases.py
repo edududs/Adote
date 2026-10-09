@@ -63,7 +63,10 @@ class RemovePet:
         if pet is None:
             raise PetNotFoundError
         pet.ensure_owned_by(by)
-        if self.ledger.is_adopted(pet_id):
-            raise AdoptedPetError
-        self.pets.remove(pet_id)
+
+        def not_adopted() -> None:
+            if self.ledger.is_adopted(pet_id):
+                raise AdoptedPetError
+
+        self.pets.remove(pet_id, guard=not_adopted)
         self.photos.delete(pet.photo)

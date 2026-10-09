@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from typing import Protocol
 
 from adote.pets.domain import Breed, BreedId, Pet, PetId, TagId
@@ -8,8 +9,12 @@ class PetRepository(Protocol):
 
     def get(self, pet_id: PetId) -> Pet | None: ...
 
-    def remove(self, pet_id: PetId) -> None:
-        """Removes the pet and whatever hangs on it. Removing a missing pet is not an error."""
+    def remove(self, pet_id: PetId, *, guard: Callable[[], None] = lambda: None) -> None:
+        """Removes the pet and whatever hangs on it. Removing a missing pet is not an error.
+
+        `guard` runs first, under the same lock adoption decisions take, so nothing it checked can
+        change before the removal; if it raises, nothing is removed.
+        """
         ...
 
 

@@ -60,6 +60,24 @@ def test_what_is_added_comes_back_equal_and_removal_is_idempotent(setup: Setup, 
         assert pets.get(pet.id) is None
 
 
+@DB
+@given(pet_details())
+def test_a_raising_guard_keeps_the_pet(setup: Setup, details: PetDetails) -> None:
+    with rolled_back():
+        pets, _catalog, owner, breed, tags = setup()
+        details = details.evolve(breed_id=breed, tag_ids=tags)
+        pet = Pet(id=uuid(6), owner_id=owner, details=details, photo="pets/x.png", published_at=EPOCH)
+        pets.add(pet)
+
+        def refuse() -> None:
+            raise LookupError
+
+        with pytest.raises(LookupError):
+            pets.remove(pet.id, guard=refuse)
+        assert pets.get(pet.id) == pet
+        pets.remove(uuid(7), guard=refuse)  # a missing pet never reaches the guard
+
+
 def test_the_catalog_knows_its_breeds_and_tags(setup: Setup) -> None:
     _, catalog, _, breed, tags = setup()
     found = catalog.breed(breed)

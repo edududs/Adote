@@ -90,8 +90,10 @@ class InMemoryPetRepository:
     def get(self, pet_id: PetId) -> Pet | None:
         return self.pets.get(pet_id)
 
-    def remove(self, pet_id: PetId) -> None:
-        self.pets.pop(pet_id, None)
+    def remove(self, pet_id: PetId, *, guard: Callable[[], None] = lambda: None) -> None:
+        if pet_id in self.pets:
+            guard()
+            del self.pets[pet_id]
 
 
 @dataclass

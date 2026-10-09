@@ -19,7 +19,7 @@ from hypothesis import strategies as st
 from adote import __version__
 from adote.accounts.adapters.models import User
 from adote.adoption.adapters.models import AdoptionRequestModel
-from adote.config.settings import env_bool, env_list
+from adote.config.settings import env, env_bool, env_list
 from adote.demo.adapters.seeding import PASSWORD, seed
 from adote.pets.adapters.models import PetModel
 from tests.conftest import signed_in
@@ -120,9 +120,7 @@ def test_security_headers_are_on(user_factory: Callable[..., User]) -> None:
     assert "frame-ancestors 'none'" in policy
 
 
-@given(
-    st.sampled_from(["1", "true", "TRUE", " yes ", "on"]), st.sampled_from(["0", "false", "no", "off", ""])
-)
+@given(st.sampled_from(["1", "true", "TRUE", " yes ", "on"]), st.sampled_from(["0", "false", "no", "off"]))
 def test_env_bool_reads_the_usual_spellings(yes: str, no: str) -> None:
     import os  # noqa: PLC0415
 
@@ -130,8 +128,24 @@ def test_env_bool_reads_the_usual_spellings(yes: str, no: str) -> None:
     assert env_bool("ADOTE_TEST_FLAG", default=False)
     os.environ["ADOTE_TEST_FLAG"] = no
     assert not env_bool("ADOTE_TEST_FLAG", default=True)
+    for blank in ("", "  "):
+        os.environ["ADOTE_TEST_FLAG"] = blank
+        assert env_bool("ADOTE_TEST_FLAG", default=True)
     del os.environ["ADOTE_TEST_FLAG"]
     assert env_bool("ADOTE_TEST_FLAG", default=True)
+
+
+@given(st.sampled_from(["", " ", "\t"]), st.text(min_size=1).filter(str.strip))
+def test_a_blank_variable_counts_as_unset(blank: str, default: str) -> None:
+    """A copied `.env.example` leaves keys empty; they must fall back to the default, not to ''."""
+    import os  # noqa: PLC0415
+
+    os.environ["ADOTE_TEST_VALUE"] = blank
+    assert env("ADOTE_TEST_VALUE", default) == default
+    os.environ["ADOTE_TEST_VALUE"] = " kept as is "
+    assert env("ADOTE_TEST_VALUE", default) == " kept as is "
+    del os.environ["ADOTE_TEST_VALUE"]
+    assert env("ADOTE_TEST_VALUE", default) == default
 
 
 @given(st.lists(st.from_regex(r"[a-z0-9.\-]{1,12}", fullmatch=True), max_size=5))

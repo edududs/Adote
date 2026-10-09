@@ -67,7 +67,9 @@ sequenceDiagram
     V->>V: erro de dono/inexistente → 404; já decidido → aviso
 ```
 
-O lock na linha do pet serializa duas aprovações simultâneas do mesmo pet; as constraints do banco
+O lock na linha do pet serializa duas aprovações simultâneas do mesmo pet, e também a remoção do pet
+com qualquer decisão sobre ele: a checagem "não foi adotado" e a exclusão acontecem sob o mesmo lock.
+As constraints do banco
 (uma aprovação por pet, um pedido vivo por adotante) seguram até uma escrita que contorne o domínio.
 
 ## Fluxo de uma leitura

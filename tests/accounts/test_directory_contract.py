@@ -42,7 +42,7 @@ def test_uniqueness_is_enforced_by_the_store_itself(
         assert not directory.phone_taken(first.phone.digits, other_than=ana)
         with pytest.raises(UsernameTakenError):
             directory.create(
-                username="ana",
+                username="ANA",
                 password="x",
                 profile=second.evolve(email="z@example.org", phone=_other(first)),
             )

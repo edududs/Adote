@@ -16,20 +16,26 @@ PACKAGE_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = PACKAGE_DIR.parent.parent  # the repository root, where manage.py lives
 
 
+def env(name: str, default: str = "") -> str:
+    """The variable's value, or `default` when it is unset or blank (as in a copied `.env.example`)."""
+    raw = os.environ.get(name, "")
+    return raw if raw.strip() else default
+
+
 def env_bool(name: str, *, default: bool) -> bool:
-    raw = os.environ.get(name)
-    return default if raw is None else raw.strip().lower() in {"1", "true", "yes", "on"}
+    raw = env(name)
+    return default if not raw else raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
 def env_list(name: str, default: str = "") -> list[str]:
-    return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
+    return [item.strip() for item in env(name, default).split(",") if item.strip()]
 
 
 DEBUG = env_bool("DJANGO_DEBUG", default=False)
 
 
 def secret_key() -> str:
-    key = os.environ.get("DJANGO_SECRET_KEY", "")
+    key = env("DJANGO_SECRET_KEY")
     if key:
         return key
     if not DEBUG:
@@ -100,8 +106,8 @@ FORM_RENDERER = "adote.shared.adapters.forms.AdoteFormRenderer"
 # Database: SQLite by default, anything dj-database-url reads otherwise (Postgres in production).
 DATABASES = {
     "default": dj_database_url.parse(
-        os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
-        conn_max_age=int(os.environ.get("DATABASE_CONN_MAX_AGE", "60")),
+        env("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+        conn_max_age=int(env("DATABASE_CONN_MAX_AGE", "60")),
         conn_health_checks=True,
     )
 }
@@ -125,9 +131,9 @@ USE_TZ = True
 
 # Static files are served by WhiteNoise, hashed and compressed. Uploaded photos live in MEDIA_ROOT.
 STATIC_URL = "static/"
-STATIC_ROOT = Path(os.environ.get("DJANGO_STATIC_ROOT", BASE_DIR / "staticfiles"))
+STATIC_ROOT = Path(env("DJANGO_STATIC_ROOT") or BASE_DIR / "staticfiles")
 MEDIA_URL = "media/"
-MEDIA_ROOT = Path(os.environ.get("DJANGO_MEDIA_ROOT", BASE_DIR / "media"))
+MEDIA_ROOT = Path(env("DJANGO_MEDIA_ROOT") or BASE_DIR / "media")
 # A reverse proxy or object storage should serve media in production; this is the fallback.
 SERVE_MEDIA = env_bool("DJANGO_SERVE_MEDIA", default=DEBUG)
 STORAGES = {
@@ -153,16 +159,16 @@ MESSAGE_TAGS = {
 
 # E-mail (Django 6.1 MAILERS): printed to the console unless an SMTP host is configured. The deploy
 # checklist refuses a console mailer, so production cannot silently drop every message.
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
+EMAIL_HOST = env("EMAIL_HOST")
 MAILERS: dict[str, dict[str, Any]] = {
     "default": (
         {
             "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
             "OPTIONS": {
                 "host": EMAIL_HOST,
-                "port": int(os.environ.get("EMAIL_PORT", "587")),
-                "username": os.environ.get("EMAIL_HOST_USER", ""),
-                "password": os.environ.get("EMAIL_HOST_PASSWORD", ""),
+                "port": int(env("EMAIL_PORT", "587")),
+                "username": env("EMAIL_HOST_USER"),
+                "password": env("EMAIL_HOST_PASSWORD"),
                 "use_tls": env_bool("EMAIL_USE_TLS", default=True),
                 "timeout": 10,
             },
@@ -179,8 +185,8 @@ TASKS: dict[str, dict[str, Any]] = {
 }
 
 # Absolute base of the links that go out in e-mails.
-SITE_URL = os.environ.get("ADOTE_SITE_URL", "http://localhost:8000")
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Adote <nao-responda@adote.local>")
+SITE_URL = env("ADOTE_SITE_URL", "http://localhost:8000")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "Adote <nao-responda@adote.local>")
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Security. Every header below is on unless debugging; the TLS ones assume a proxy that terminates TLS.
@@ -195,7 +201,7 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
     SECURE_REDIRECT_EXEMPT = [r"^saude/$"]  # the container healthcheck speaks plain HTTP on loopback
-    SECURE_HSTS_SECONDS = int(os.environ.get("DJANGO_HSTS_SECONDS", str(60 * 60 * 24 * 365)))
+    SECURE_HSTS_SECONDS = int(env("DJANGO_HSTS_SECONDS", str(60 * 60 * 24 * 365)))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SESSION_COOKIE_SECURE = True
@@ -222,5 +228,5 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {"plain": {"format": "{asctime} {levelname} {name} {message}", "style": "{"}},
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "plain"}},
-    "root": {"handlers": ["console"], "level": os.environ.get("DJANGO_LOG_LEVEL", "INFO")},
+    "root": {"handlers": ["console"], "level": env("DJANGO_LOG_LEVEL", "INFO")},
 }

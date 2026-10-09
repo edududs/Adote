@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from uuid import UUID
 
 from django.db import transaction
@@ -33,8 +34,16 @@ class DjangoPetRepository:
         row = PetModel.objects.filter(pk=pet_id).prefetch_related("tags").first()
         return None if row is None else to_entity(row)
 
-    def remove(self, pet_id: PetId) -> None:
-        PetModel.objects.filter(pk=pet_id).delete()
+    def remove(self, pet_id: PetId, *, guard: Callable[[], None] = lambda: None) -> None:
+        # The same row lock `DjangoAdoptionProcesses.change` takes, so no decision lands mid-removal.
+        with transaction.atomic():
+            if (
+                PetModel.objects.select_for_update().filter(pk=pet_id).values_list("pk", flat=True).first()
+                is None
+            ):
+                return
+            guard()
+            PetModel.objects.filter(pk=pet_id).delete()
 
 
 def to_entity(row: PetModel) -> Pet:
