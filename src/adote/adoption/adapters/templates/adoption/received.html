@@ -1,34 +1,57 @@
 {% extends "app.html" %}
 {% block title %}Pedidos recebidos{% endblock %}
 {% block content %}
-<h2 class="font-vinho">Pedidos para os seus pets</h2>
-{% if requests %}
-<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-1">
-  {% for item in requests %}
-  <div class="col">
-    <article class="card h-100 shadow-sm">
-      <img class="card-img-top pet-photo" src="{{ item.pet.photo.url }}" alt="Foto de {{ item.pet.name }}" loading="lazy">
-      <div class="card-body">
-        <h3 class="h5 card-title">{{ item.pet.name }}</h3>
-        <p class="mb-1">Pedido de <a href="{% url 'adoption:adopter' item.id %}">{{ item.adopter.get_full_name|default:item.adopter.username }}</a></p>
-        <p class="small text-muted mb-2">{{ item.requested_at|date:"d/m/Y H:i" }} · {% include "adoption/_status.html" with status=item.status %}</p>
-        {% if item.message %}<blockquote class="small border-start ps-2">{{ item.message|linebreaksbr }}</blockquote>{% endif %}
+{% include "partials/ui.html#page-header" with eyebrow="Quero divulgar" title="Pedidos recebidos" subtitle="Leia quem quer adotar e escolha a melhor família. Cada pessoa recebe um e-mail com a sua resposta." %}
+
+{% partialdef request-card %}
+<li class="card flex flex-col overflow-hidden sm:flex-row">
+  <a href="{% url 'adoption:pet' item.pet.id %}" class="relative block shrink-0 bg-plum-50 sm:w-40">
+    <img class="pet-photo aspect-[4/3] w-full object-cover sm:aspect-auto sm:h-full" src="{{ item.pet.photo.url }}" alt="" loading="lazy">
+    <span class="overlay-chip absolute bottom-2 left-2">{{ item.pet.name }}</span>
+  </a>
+  <div class="flex flex-1 flex-col p-5">
+    <div class="flex items-start gap-3">
+      {% include "partials/ui.html#avatar" with person=item.adopter %}
+      <div class="min-w-0 flex-1">
+        <a class="font-semibold text-plum-900" href="{% url 'adoption:adopter' item.id %}">{{ item.adopter.get_full_name|default:item.adopter.username }}</a>
+        <p class="text-xs text-ink-muted">quer adotar {{ item.pet.name }} · {{ item.requested_at|date:"d/m H:i" }}</p>
+        <div class="mt-2">{% include "partials/ui.html#status" with status=item.status %}</div>
       </div>
-      {% if item.status == "pending" %}
-      <div class="card-footer d-flex gap-2">
-        <form method="post" action="{% url 'adoption:approve' item.id %}" class="flex-fill" data-confirm="Aprovar este pedido? Os outros pedidos para {{ item.pet.name }} serão recusados.">
-          {% csrf_token %}<button type="submit" class="btn btn-success w-100">Aprovar</button>
-        </form>
-        <form method="post" action="{% url 'adoption:reject' item.id %}" class="flex-fill">
-          {% csrf_token %}<button type="submit" class="btn btn-outline-danger w-100">Recusar</button>
-        </form>
-      </div>
-      {% endif %}
-    </article>
+    </div>
+    {% if item.message %}<p class="bubble mt-3">{{ item.message|linebreaksbr }}</p>{% endif %}
+    {% if item.status == "pending" %}
+    <div class="mt-4 flex flex-wrap gap-2 sm:mt-auto sm:pt-4">
+      <form method="post" action="{% url 'adoption:approve' item.id %}" data-confirm="Os outros pedidos para {{ item.pet.name }} serão recusados, e cada pessoa recebe um e-mail." data-confirm-title="Aprovar o pedido de {{ item.adopter.first_name|default:item.adopter.username }}?" data-confirm-action="Aprovar pedido" data-confirm-tone="primary">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-check" aria-hidden="true"></i>Aprovar</button>
+      </form>
+      <form method="post" action="{% url 'adoption:reject' item.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-xmark" aria-hidden="true"></i>Recusar</button>
+      </form>
+      <a class="btn btn-ghost btn-sm" href="{% url 'adoption:adopter' item.id %}">Ver perfil</a>
+    </div>
+    {% endif %}
   </div>
-  {% endfor %}
+</li>
+{% endpartialdef %}
+
+{% if requests %}
+<div class="space-y-8">
+  {% if pending %}
+  <section aria-labelledby="aguardando">
+    <h2 id="aguardando" class="eyebrow mb-3">Aguardando você ({{ pending|length }})</h2>
+    <ul class="stagger grid gap-5 xl:grid-cols-2" role="list">{% for item in pending %}{% partial request-card %}{% endfor %}</ul>
+  </section>
+  {% endif %}
+  {% if answered %}
+  <section aria-labelledby="respondidos">
+    <h2 id="respondidos" class="eyebrow mb-3">Respondidos</h2>
+    <ul class="stagger grid gap-5 xl:grid-cols-2" role="list">{% for item in answered %}{% partial request-card %}{% endfor %}</ul>
+  </section>
+  {% endif %}
 </div>
 {% else %}
-<p class="lead mt-4">Nenhum pedido de adoção por enquanto.</p>
+{% include "partials/ui.html#empty" with icon="fa-inbox" title="Nenhum pedido por enquanto" text="Assim que alguém pedir um dos seus pets, o pedido aparece aqui e você recebe um e-mail." %}
 {% endif %}
 {% endblock %}

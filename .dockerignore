@@ -12,3 +12,5 @@ media
 staticfiles
 tests
 docs
+node_modules
+assets

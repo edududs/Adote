@@ -107,7 +107,7 @@ def test_templates_load_nothing_from_other_origins() -> None:
 def test_errors_use_the_apps_pages(user_factory: Callable[..., User]) -> None:
     response = signed_in(user_factory()).get("/nada-aqui/")
     assert response.status_code == 404
-    assert "Não encontramos" in response.content.decode()
+    assert "não achamos essa página" in response.content.decode()
 
 
 @pytest.mark.django_db

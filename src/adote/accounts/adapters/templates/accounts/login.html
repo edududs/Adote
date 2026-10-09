@@ -1,15 +1,18 @@
 {% extends "auth.html" %}
 {% block title %}Entrar{% endblock %}
 {% block content %}
-<h2>Entrar</h2>
-<p>Que bom ter você de volta!</p>
-<hr>
-<form method="post" action="{% url 'accounts:login' %}" novalidate>
+<h1 class="text-2xl font-extrabold sm:text-3xl">Que bom ver você de novo!</h1>
+<p class="mt-1 mb-6 text-ink-muted">Entre para ver os pets e acompanhar seus pedidos.</p>
+<form method="post" action="{% url 'accounts:login' %}" novalidate data-loading>
   {% csrf_token %}
-  {% include "partials/_form_errors.html" %}
-  {% for field in form %}{% include "partials/_field.html" %}{% endfor %}
+  {% include "partials/ui.html#form-errors" %}
+  {{ form.username.as_field_group }}
+  {{ form.password.as_field_group }}
   <input type="hidden" name="next" value="{{ next }}">
-  <button type="submit" class="btn btn-custom-primary btn-lg">Entrar</button>
-  <a href="{% url 'accounts:signup' %}" class="link-light float-end mt-3">Ainda não tenho conta</a>
+  <button type="submit" class="btn btn-primary mt-2 w-full">
+    <span class="btn-label-idle">Entrar</span>
+    <span class="btn-label-busy"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Entrando…</span>
+  </button>
 </form>
+<p class="mt-6 text-center text-sm text-ink-muted">Ainda não tem conta? <a href="{% url 'accounts:signup' %}" class="font-semibold">Cadastre-se</a></p>
 {% endblock %}

@@ -1,3 +1,4 @@
+import importlib
 import io
 import os
 from collections.abc import Callable, Generator
@@ -83,6 +84,20 @@ def make_pet(owner: User, *, name: str = "Thor", breed: str = "Beagle", **change
         contact_phone=PhoneNumber.parse("(61) 99999-0000"),
     ).evolve(**changes)
     return publish_pet()(owner.pk, details, Photo(filename="photo.png", content=png_bytes())).id
+
+
+@pytest.fixture(autouse=True)
+def _seeded_catalog(request: pytest.FixtureRequest) -> None:
+    """Breeds and tags come from a data migration. A transactional test (the browser tests) ends by
+    flushing every table, so any database test that follows puts the catalog back first."""
+    if "django_db" not in request.keywords and "db" not in request.fixturenames:
+        return
+    from django.apps import apps  # noqa: PLC0415
+
+    blocker = request.getfixturevalue("django_db_blocker")
+    with blocker.unblock():
+        if not Breed.objects.exists():
+            importlib.import_module("adote.pets.adapters.migrations.0002_seed_catalog").seed(apps, None)
 
 
 @pytest.fixture

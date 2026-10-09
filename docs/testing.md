@@ -12,6 +12,7 @@
 | Contratos de porta | `tests/*/test_*contract.py`, marcados `contract` | O fake e o adaptador Django se comportam igual, então o que os testes de caso de uso assumem é o que produção faz |
 | Banco | `tests/adoption/test_repository.py` | Atomicidade do `change`; constraints que seguram escritas que contornam o domínio |
 | Views | `tests/*/test_views.py` | Matriz de autorização, privacidade do telefone, filtros do mural como propriedade, números do painel que fecham |
+| Navegador | `tests/e2e/`, marcados `e2e` | As páginas de verdade no Chromium contra um servidor ao vivo: diálogo de confirmação, menu do celular, prévia da foto, máscaras, toasts, foco no primeiro erro, foco sempre visível, nenhuma tela com erro de JavaScript |
 | Projeto | `tests/test_project.py`, `test_architecture.py` | Fronteira do hexágono, versão SemVer igual ao pacote, migrations em dia, admin abre, estáticos existem, nada de outra origem, cabeçalhos de segurança, produção segura por padrão |
 
 ## A máquina de estados
@@ -39,8 +40,16 @@ Os testes rodam em SQLite. Com `TEST_DATABASE_URL` apontando para um Postgres, a
 nele (`uv run poe test-postgres`); o CI faz isso a cada push.
 
 Exemplos do Hypothesis que escrevem no banco rodam dentro de `rolled_back()` (em `tests/conftest.py`):
-o pytest-django isola um teste, não cada exemplo dentro dele. Evite testes transacionais
-(`transaction=True`): o `flush` no fim apaga o catálogo semeado por migração para os testes seguintes.
+o pytest-django isola um teste, não cada exemplo dentro dele. Testes transacionais
+(`transaction=True`) só nos de navegador, que precisam de um servidor ao vivo.
+
+## Navegador
+
+Os testes de `tests/e2e/` usam o Playwright. Com `ADOTE_CHROMIUM` eles usam esse executável; sem
+ele, o Chromium do próprio Playwright (`uv run playwright install chromium`). Sem navegador nenhum
+eles são pulados, exceto no CI, onde `ADOTE_REQUIRE_BROWSER=1` transforma isso em falha. Como
+são transacionais, o `flush` do fim apaga o catálogo; a fixture `_seeded_catalog` o recoloca
+antes do próximo teste com banco.
 
 ## Perfis do Hypothesis
 

@@ -7,7 +7,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from pydantic import ValidationError
 
 from adote.accounts.domain import ABOUT_LIMIT, NAME_LIMIT, PLACE_LIMIT, Profile
-from adote.shared.adapters.forms import BootstrapForm
+from adote.shared.adapters.forms import StyledForm
 from adote.shared.domain import (
     InvalidPhoneNumberError,
     InvalidPostalCodeError,
@@ -21,7 +21,7 @@ from .models import User
 STATE_CHOICES = [("", "Selecione"), *((state.value, state.full_name) for state in State)]
 
 
-class ProfileForm(BootstrapForm, forms.Form):
+class ProfileForm(StyledForm, forms.Form):
     first_name = forms.CharField(label="Nome", max_length=NAME_LIMIT)
     last_name = forms.CharField(label="Sobrenome", max_length=NAME_LIMIT, required=False)
     email = forms.EmailField(label="E-mail")
@@ -157,9 +157,9 @@ class SignUpForm(ProfileForm):
         return cleaned
 
 
-class LoginForm(BootstrapForm, AuthenticationForm):
+class LoginForm(StyledForm, AuthenticationForm):
     pass
 
 
-class PasswordForm(BootstrapForm, PasswordChangeForm):
+class PasswordForm(StyledForm, PasswordChangeForm):
     pass

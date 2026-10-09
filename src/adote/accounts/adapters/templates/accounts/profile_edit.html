@@ -1,17 +1,25 @@
 {% extends "app.html" %}
-{% load static %}
 {% block title %}Editar perfil{% endblock %}
-{% block scripts %}<script src="{% static 'adote/js/cep.js' %}" defer></script>{% endblock %}
 {% block content %}
-<div class="box">
-  <h2 class="font-vinho">Editar perfil</h2>
-  <hr>
-  <form method="post" novalidate>
-    {% csrf_token %}
-    {% include "partials/_form_errors.html" %}
-    {% for field in form %}{% include "partials/_field.html" %}{% endfor %}
-    <button type="submit" class="btn btn-custom-primary">Salvar</button>
-    <a class="btn btn-link" href="{% url 'accounts:profile' %}">Cancelar</a>
-  </form>
-</div>
+{% url 'accounts:profile' as back %}
+{% include "partials/ui.html#page-header" with title="Editar perfil" subtitle="Mantenha seus dados em dia: é por eles que quem divulga fala com você." %}
+<form method="post" novalidate data-loading class="card card-pad max-w-3xl motion-safe:animate-rise">
+  {% csrf_token %}
+  {% include "partials/ui.html#form-errors" %}
+  <div class="grid gap-x-4 sm:grid-cols-2">
+    {{ form.first_name.as_field_group }}
+    {{ form.last_name.as_field_group }}
+    {{ form.email.as_field_group }}
+    {{ form.phone.as_field_group }}
+    {{ form.postal_code.as_field_group }}
+    {{ form.state.as_field_group }}
+    {{ form.city.as_field_group }}
+    {{ form.neighborhood.as_field_group }}
+  </div>
+  {{ form.about.as_field_group }}
+  <div class="flex flex-wrap gap-2">
+    <button type="submit" class="btn btn-primary"><span class="btn-label-idle">Salvar</span><span class="btn-label-busy"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Salvando…</span></button>
+    <a class="btn btn-ghost" href="{{ back }}">Cancelar</a>
+  </div>
+</form>
 {% endblock %}

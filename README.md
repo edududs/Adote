@@ -63,6 +63,10 @@ com lock na linha do pet. Por isso as regras que cruzam pedidos (uma aprovação
 pendente depois da adoção, um pedido vivo por pessoa) valem sempre, e o banco as repete como
 constraints. A situação "adotado" é calculada a partir dos pedidos, nunca gravada.
 
+**Front sem framework.** Templates do Django 6 (partials, `{% querystring %}`, campos renderizados
+por template) com Tailwind 4; menu e confirmações em `<dialog>` nativo, e o resto em JS puro, que
+melhora a página sem ser necessário. Animações respeitam `prefers-reduced-motion`.
+
 Detalhes em [docs/architecture.md](docs/architecture.md); o porquê de cada escolha em
 [docs/decisions/](docs/decisions/README.md).
 

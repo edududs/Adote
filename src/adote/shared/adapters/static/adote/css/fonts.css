@@ -1,0 +1,16 @@
+/* Self-hosted variable fonts (latin subset covers ã, ç, é...). See static/vendor/README.md. */
+@font-face {
+  font-family: "Nunito Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 1000;
+  src: url("../../vendor/fontsource-nunito-5.3.0/nunito-latin-wght-normal.woff2") format("woff2-variations");
+}
+
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("../../vendor/fontsource-inter-5.3.0/inter-latin-wght-normal.woff2") format("woff2-variations");
+}

@@ -16,6 +16,7 @@ from adote.adoption.domain import (
     PetAlreadyAdoptedError,
     RequestNotFoundError,
     RequestNotPendingError,
+    RequestStatus,
     UnknownPetError,
 )
 from adote.shared.domain import PhoneNumber
@@ -39,9 +40,7 @@ def board(request: HttpRequest) -> HttpResponse:
     form = BoardFilterForm(request.GET)
     pets = queries.board(_signed_in(request).pk, form.to_filter())
     page = Paginator(pets, PAGE_SIZE).get_page(request.GET.get("pagina"))
-    query = request.GET.copy()
-    query.pop("pagina", None)
-    return render(request, "adoption/board.html", {"form": form, "page": page, "query": query.urlencode()})
+    return render(request, "adoption/board.html", {"form": form, "page": page})
 
 
 @require_GET
@@ -132,7 +131,11 @@ def withdraw(request: HttpRequest, request_id: UUID) -> HttpResponse:
 
 @require_GET
 def received(request: HttpRequest) -> HttpResponse:
-    return render(request, "adoption/received.html", {"requests": queries.received(_signed_in(request).pk)})
+    requests = list(queries.received(_signed_in(request).pk))
+    pending = [item for item in requests if item.status == RequestStatus.PENDING.value]
+    answered = [item for item in requests if item.status != RequestStatus.PENDING.value]
+    context = {"requests": requests, "pending": pending, "answered": answered}
+    return render(request, "adoption/received.html", context)
 
 
 @require_GET
@@ -155,7 +158,35 @@ def my_pets(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def dashboard(request: HttpRequest) -> HttpResponse:
-    return render(request, "adoption/dashboard.html", {"totals": queries.totals()})
+    totals = queries.totals()
+    tiles = [
+        {
+            "label": "pets divulgados",
+            "value": totals.published,
+            "icon": "fa-bullhorn",
+            "tint": "bg-plum-50 text-plum-500",
+        },
+        {
+            "label": "esperando um lar",
+            "value": totals.available,
+            "icon": "fa-house-chimney",
+            "tint": "bg-honey-100 text-warning",
+        },
+        {
+            "label": "adotados",
+            "value": totals.adopted,
+            "icon": "fa-heart",
+            "tint": "bg-success-bg text-success",
+        },
+        {
+            "label": "pedidos em aberto",
+            "value": totals.pending_requests,
+            "icon": "fa-envelope-open-text",
+            "tint": "bg-teal-100 text-teal-700",
+        },
+    ]
+    context = {"totals": totals, "tiles": tiles, "by_breed": queries.adoptions_by_breed()}
+    return render(request, "adoption/dashboard.html", context)
 
 
 @require_GET

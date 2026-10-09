@@ -19,15 +19,32 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HYPOTHESIS_PROFILE: ci
+      ADOTE_REQUIRE_BROWSER: "1"
     steps:
       - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
       - run: uv sync --locked
+      # The browser tests (tests/e2e) must run here, never skip.
+      - run: uv run playwright install --with-deps chromium
       # Same gate as `uv run poe check` locally: format, lint, types, tests with the coverage floor,
       # migration drift and Django's deploy checklist. It reports; it never rewrites files.
       - run: uv run poe check
+
+  assets:
+    name: stylesheet is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # The compiled CSS is versioned so the app runs without Node; it must match its source.
+      - run: npm run build:css
+      - run: git diff --exit-code -- src/adote/shared/adapters/static/adote/css/app.css
 
   postgres:
     name: tests (Postgres)
@@ -57,4 +74,4 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync --locked
-      - run: uv run pytest --create-db -p no:cacheprovider
+      - run: uv run pytest --create-db -p no:cacheprovider -m "not e2e"

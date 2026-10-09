@@ -12,8 +12,8 @@ flowchart LR
     P -.CEP, só preenchimento.-> V[ViaCEP]
 ```
 
-Uma aplicação Django 6.1 renderizada no servidor. Não há SPA nem API pública; o único JSON é o do gráfico
-do painel. Todo script, estilo e fonte é servido pela própria aplicação (sem CDN), então a CSP só
+Uma aplicação Django 6.1 renderizada no servidor, com visual em Tailwind 4 e JS puro para as
+interações (ADR 0011). Não há SPA nem API pública; o único JSON é o do gráfico do painel. Todo script, estilo e fonte é servido pela própria aplicação (sem CDN), então a CSP só
 aceita `'self'`; a única origem externa é a consulta de CEP feita pelo navegador.
 
 ## Contextos

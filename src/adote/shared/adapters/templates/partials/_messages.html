@@ -1,6 +1,11 @@
-{% for message in messages %}
-<div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
-  {{ message }}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+{% if messages %}
+<div class="toast-stack">
+  {% for message in messages %}
+  <div class="toast toast-{{ message.level_tag }}" role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}" data-autohide="{% if message.level_tag == 'success' or message.level_tag == 'info' %}10000{% endif %}">
+    <i class="fa-solid {% if message.level_tag == 'success' %}fa-circle-check text-success{% elif message.level_tag == 'error' %}fa-circle-exclamation text-danger{% elif message.level_tag == 'warning' %}fa-triangle-exclamation text-warning{% else %}fa-circle-info text-info{% endif %} mt-0.5 text-base" aria-hidden="true"></i>
+    <p class="flex-1">{{ message }}</p>
+    <button type="button" class="-m-3 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-ink-muted hover:text-ink" data-dismiss-toast aria-label="Fechar aviso"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+  </div>
+  {% endfor %}
 </div>
-{% endfor %}
+{% endif %}

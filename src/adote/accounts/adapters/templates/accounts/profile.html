@@ -1,15 +1,15 @@
 {% extends "app.html" %}
 {% block title %}Perfil{% endblock %}
 {% block content %}
-<div class="box">
-  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-    <h2 class="font-vinho mb-0">Seu perfil</h2>
-    <div class="d-flex gap-2">
-      <a class="btn btn-custom-primary" href="{% url 'accounts:edit_profile' %}">Editar perfil</a>
-      <a class="btn btn-outline-secondary" href="{% url 'accounts:password' %}">Trocar senha</a>
-    </div>
+<header class="page-header">
+  <div>
+    <h1 class="page-title">Seu perfil</h1>
+    <p class="page-subtitle">É isso que quem divulga um pet vê quando você pede para adotar.</p>
   </div>
-  <hr>
-  {% include "accounts/_profile_card.html" with person=account %}
-</div>
+  <div class="flex flex-wrap gap-2">
+    <a class="btn btn-primary" href="{% url 'accounts:edit_profile' %}"><i class="fa-solid fa-pen" aria-hidden="true"></i>Editar perfil</a>
+    <a class="btn btn-outline" href="{% url 'accounts:password' %}"><i class="fa-solid fa-key" aria-hidden="true"></i>Trocar senha</a>
+  </div>
+</header>
+<div class="max-w-3xl motion-safe:animate-rise">{% include "accounts/_profile_card.html" with person=account %}</div>
 {% endblock %}

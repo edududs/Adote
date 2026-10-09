@@ -54,16 +54,25 @@ As regras que valem em todo o código. São poucas, e todas são conferidas por 
   e entra na lista `PUBLIC` de `tests/test_project.py`.
 - View: decorador de método HTTP (`require_GET`/`require_POST`), traduz erro de domínio em mensagem
   ou 404. Sem regra de negócio em view nem em template.
-- API do Django mais nova que os stubs de tipo entra por `shared/adapters/compat.py`, tipada.
-- Formulário herda de `BootstrapForm` e converte a entrada em value objects nos `clean_*`.
+- API do Django mais nova que o `django-types` ganha um stub em `typings/`, só com o que usamos, até o pacote alcançar.
+- Formulário herda de `StyledForm` e converte a entrada em value objects nos `clean_*`.
 - Dado de referência (raças, características) entra por migração de dados, nunca por sinal.
 
 ## Templates e estáticos
 
-- Página logada estende `app.html`; login e cadastro estendem `auth.html`. Campo de formulário pelo
-  `partials/_field.html`, mensagens pelo `partials/_messages.html`.
-- Nenhum recurso de outra origem: bibliotecas ficam em `shared/adapters/static/vendor/` com a versão
-  no nome da pasta. A CSP só aceita `'self'`.
+- Estilo é Tailwind 4: utilitários no template, componentes (`.btn`, `.card`, `.badge`, `.input`...)
+  e tokens (`@theme`) em `assets/css/app.css`. Depois de mudar classes, `uv run poe css`; o CSS
+  compilado vai no commit, e o CI falha se ele estiver desatualizado.
+- Página logada estende `app.html`; login e cadastro estendem `auth.html`. Campo de formulário é
+  `{{ form.campo.as_field_group }}` (renderizado por `forms/field.html`). Peças reutilizáveis são
+  partials de `partials/ui.html` (`{% include "partials/ui.html#empty" with ... %}`); paginação com
+  `{% querystring %}`.
+- Interação com HTML nativo antes de JS: `<dialog>` para menu e confirmação, `<details>` para o que
+  recolhe. JS puro em `static/adote/js/`, que melhora a página mas nunca é necessário para ela funcionar.
+- Animação só de `transform` e `opacity`, sempre com `motion-safe:` (ou checando
+  `prefers-reduced-motion` no JS).
+- Nenhum recurso de outra origem: bibliotecas e fontes ficam em `shared/adapters/static/vendor/` com
+  a versão no nome da pasta. A CSP só aceita `'self'`.
 - Sem `<script>` inline nem `onclick`: comportamento vai para um arquivo em `static/adote/js/`.
   Confirmação de ação destrutiva é `data-confirm` no `<form>`.
 - Ação que muda estado é `<form method="post">` com `{% csrf_token %}`, nunca link.

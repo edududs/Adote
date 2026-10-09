@@ -53,6 +53,14 @@ help = "Create the local database and load the demonstration seed"
 sequence = [{ cmd = "python manage.py migrate" }, { cmd = "python manage.py seed_demo" }]
 env = { DJANGO_DEBUG.default = "1" }
 
+[tasks.css]
+help = "Build the Tailwind stylesheet (static/adote/css/app.css). Needs Node: run `npm ci` once"
+cmd = "npm run --silent build:css"
+
+[tasks.css-watch]
+help = "Rebuild the stylesheet on every template or CSS change"
+cmd = "npm run --silent watch:css"
+
 [tasks.screens]
 help = "Regenerate docs/screens/ (pictures and README) from the demo seed. ADOTE_CHROMIUM picks the browser"
 cmd = "python scripts/screens.py"

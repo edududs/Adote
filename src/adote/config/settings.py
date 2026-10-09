@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
-    "fontawesomefree",
+    "django.forms",
     "adote.shared.adapters",
     "adote.accounts.adapters",
     "adote.pets.adapters",
@@ -93,6 +93,9 @@ TEMPLATES: list[dict[str, Any]] = [
         },
     },
 ]
+
+# Forms render each field through templates/forms/field.html (Django 5+ field templates).
+FORM_RENDERER = "adote.shared.adapters.forms.AdoteFormRenderer"
 
 # Database: SQLite by default, anything dj-database-url reads otherwise (Postgres in production).
 DATABASES = {
@@ -204,8 +207,8 @@ SELF, NONE, UNSAFE_INLINE = "'self'", "'none'", "'unsafe-inline'"
 SECURE_CSP: dict[str, list[str]] = {
     "default-src": [SELF],
     "script-src": [SELF],
-    "style-src": [SELF, UNSAFE_INLINE],  # select2 and Chart.js set inline styles
-    "img-src": [SELF, "data:"],
+    "style-src": [SELF, UNSAFE_INLINE],  # Tom Select and Chart.js set inline styles
+    "img-src": [SELF, "data:", "blob:"],  # blob: previews the photo chosen for upload
     "font-src": [SELF],
     "connect-src": [SELF, "https://viacep.com.br"],
     "frame-ancestors": [NONE],

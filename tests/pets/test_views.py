@@ -79,7 +79,7 @@ def test_invalid_submissions_explain_the_field_and_store_nothing(
     assert response.status_code == 200
     assert field in response.context["form"].errors
     assert not PetModel.objects.exists()
-    assert "is-invalid" in response.content.decode()
+    assert 'aria-invalid="true"' in response.content.decode()
 
 
 @override_settings(PET_PHOTO_MAX_BYTES=10)

@@ -8,7 +8,7 @@ from pydantic import ValidationError
 
 from adote.pets.application import Photo
 from adote.pets.domain import CITY_LIMIT, DESCRIPTION_LIMIT, NAME_LIMIT, TAG_LIMIT, PetDetails, Sex, Species
-from adote.shared.adapters.forms import BootstrapForm
+from adote.shared.adapters.forms import StyledForm
 from adote.shared.domain import InvalidPhoneNumberError, PhoneNumber, State
 
 from .models import SEX_CHOICES, SPECIES_CHOICES, STATE_CHOICES, Breed, Tag
@@ -24,11 +24,13 @@ def breed_choices() -> list[tuple[str, list[tuple[int, str]]]]:
     return list(groups.items())
 
 
-class PetForm(BootstrapForm, forms.Form):
+class PetForm(StyledForm, forms.Form):
     photo = forms.ImageField(
         label="Foto",
         help_text="JPEG, PNG ou WEBP, até 5 MB.",
-        widget=forms.ClearableFileInput(attrs={"accept": "image/jpeg,image/png,image/webp"}),
+        widget=forms.FileInput(
+            attrs={"accept": "image/jpeg,image/png,image/webp", "aria-labelledby": "photo-label"}
+        ),
     )
     name = forms.CharField(label="Nome", max_length=NAME_LIMIT)
     species = forms.ChoiceField(label="Espécie", choices=SPECIES_CHOICES)
@@ -39,7 +41,7 @@ class PetForm(BootstrapForm, forms.Form):
         coerce=int,
         required=False,
         choices=lambda: [(tag.pk, tag.name) for tag in Tag.objects.all()],
-        widget=forms.SelectMultiple(attrs={"data-enhance": "select2"}),
+        widget=forms.SelectMultiple(attrs={"data-enhance": "tom-select"}),
     )
     description = forms.CharField(
         label="Descrição",

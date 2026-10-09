@@ -1,0 +1,53 @@
+{% comment %}
+Small reusable pieces, as Django 6 template partials. Use with
+{% include "partials/ui.html#<name>" with ... %}.
+{% endcomment %}
+
+{% partialdef avatar %}
+<span class="avatar{% if large %} avatar-lg{% endif %}" aria-hidden="true">{{ person.first_name|default:person.username|first|upper }}{{ person.last_name|first|upper }}</span>
+{% endpartialdef %}
+
+{% partialdef page-header %}
+<header class="page-header">
+  <div>
+    {% if eyebrow %}<p class="eyebrow mb-1">{{ eyebrow }}</p>{% endif %}
+    <h1 class="page-title">{{ title }}</h1>
+    {% if subtitle %}<p class="page-subtitle">{{ subtitle }}</p>{% endif %}
+  </div>
+  {% if action_url %}<a class="btn btn-primary" href="{{ action_url }}"><i class="fa-solid {{ action_icon|default:'fa-plus' }}" aria-hidden="true"></i>{{ action_label }}</a>{% endif %}
+</header>
+{% endpartialdef %}
+
+{% partialdef empty %}
+<div class="card card-pad flex flex-col items-center px-4 py-12 text-center motion-safe:animate-rise">
+  <div class="relative mb-5 flex size-22 items-center justify-center rounded-full bg-plum-50">
+    <i class="fa-solid {{ icon|default:'fa-paw' }} text-3xl text-plum-500" aria-hidden="true"></i>
+    <i class="fa-solid fa-paw absolute -top-1 -right-2 -rotate-20 text-sm text-honey-400" aria-hidden="true"></i>
+    <i class="fa-solid fa-paw absolute -right-5 top-5 -rotate-20 text-xs text-honey-400" aria-hidden="true"></i>
+  </div>
+  <h2 class="text-xl font-extrabold">{{ title }}</h2>
+  {% if text %}<p class="mt-2 max-w-[42ch] text-ink-muted">{{ text }}</p>{% endif %}
+  {% if cta_url %}<a class="btn btn-primary mt-6" href="{{ cta_url }}">{{ cta_label }}</a>{% endif %}
+</div>
+{% endpartialdef %}
+
+{% partialdef status %}
+{% if status == "pending" %}<span class="badge badge-pending"><i class="fa-regular fa-clock" aria-hidden="true"></i>Aguardando resposta</span>
+{% elif status == "approved" %}<span class="badge badge-approved"><i class="fa-solid fa-circle-check" aria-hidden="true"></i>Aprovado</span>
+{% elif status == "rejected" %}<span class="badge badge-rejected"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>Recusado</span>
+{% elif status == "withdrawn" %}<span class="badge badge-withdrawn"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i>Cancelado</span>{% endif %}
+{% endpartialdef %}
+
+{% partialdef availability %}
+{% if adopted %}<span class="badge badge-adopted"><i class="fa-solid fa-house" aria-hidden="true"></i>Adotado</span>
+{% else %}<span class="badge badge-available"><i class="fa-solid fa-heart" aria-hidden="true"></i>Para adoção</span>{% endif %}
+{% endpartialdef %}
+
+{% partialdef form-errors %}
+{% if form.non_field_errors %}
+<div class="mb-5 flex gap-3 rounded-xl bg-danger-bg p-4 text-sm text-danger" role="alert">
+  <i class="fa-solid fa-circle-exclamation mt-0.5" aria-hidden="true"></i>
+  <div>{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>
+</div>
+{% endif %}
+{% endpartialdef %}

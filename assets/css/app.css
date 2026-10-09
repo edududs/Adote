@@ -1,0 +1,467 @@
+/*
+ * Adote stylesheet. Tailwind 4: configuration lives here, in CSS.
+ * Build: `npm run build:css` (or `uv run poe css`). The output is versioned in static/adote/css/app.css.
+ */
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@source "../../src/adote";
+
+@theme {
+  /* Type */
+  --font-display: "Nunito Variable", ui-rounded, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Brand */
+  --color-plum-50: #fbf4f9;
+  --color-plum-100: #f6eaf3;
+  --color-plum-200: #ead3e4;
+  --color-plum-500: #7a2f6e;
+  --color-plum-700: #5e2a57;
+  --color-plum-900: #2e1a2b;
+  --color-teal-100: #e1efef;
+  --color-teal-600: #2f6f74;
+  --color-teal-700: #255a5e;
+  --color-wine-100: #fbe7ea;
+  --color-wine-600: #a8364b;
+  --color-wine-700: #922c40;
+  --color-honey-100: #fff1d6;
+  --color-honey-400: #f2b84b;
+
+  /* Surfaces and text */
+  --color-cream: #fbf7f2;
+  --color-sunken: #f4eee8;
+  --color-line: #e7ded5;
+  --color-line-strong: #8f8189; /* 3.7:1 on white: field borders must be visible */
+  --color-ink: #2a2128;
+  --color-ink-muted: #6b5e66;
+  --color-on-dark-muted: #c9b6c4;
+
+  /* Semantic, foreground and background */
+  --color-success: #1f6b3f;
+  --color-success-bg: #e3f4ea;
+  --color-warning: #8a5300;
+  --color-warning-bg: #fff1d6;
+  --color-danger: #b3261e;
+  --color-danger-bg: #fdecea;
+  --color-info: #2f6690;
+  --color-info-bg: #e6f0f7;
+  --color-neutral: #5f5560;
+  --color-neutral-bg: #f1ecef;
+
+  /* Depth, plum tinted */
+  --shadow-soft: 0 1px 2px rgb(46 26 43 / 0.06), 0 1px 3px rgb(46 26 43 / 0.08);
+  --shadow-raised: 0 4px 12px -2px rgb(46 26 43 / 0.1), 0 2px 4px rgb(46 26 43 / 0.06);
+  --shadow-lift: 0 14px 30px -8px rgb(46 26 43 / 0.22);
+
+  /* Motion */
+  --ease-out-quint: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-rise: rise 420ms var(--ease-out-quint) both;
+  --animate-pop: pop 400ms var(--ease-spring);
+  --animate-float: float 4s ease-in-out 2; /* stops by itself (WCAG 2.2.2) */
+  --animate-toast-in: toast-in 320ms var(--ease-out-quint) both;
+  --animate-fade-in: fade-in 320ms ease-out both;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  @keyframes pop {
+    50% {
+      transform: scale(1.35);
+    }
+  }
+
+  @keyframes float {
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateX(24px);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes burst {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0) scale(0.4);
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--burst-x), var(--burst-y)) scale(1) rotate(var(--burst-r));
+    }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-cream font-sans text-ink antialiased;
+    line-height: 1.55;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-plum-900;
+    letter-spacing: -0.01em;
+  }
+
+  a {
+    @apply text-teal-600 underline-offset-2 hover:text-teal-700;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-teal-600);
+    outline-offset: 2px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-honey-400);
+  }
+
+  ::selection {
+    @apply bg-honey-100 text-plum-900;
+  }
+}
+
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold no-underline transition duration-200 select-none disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn:active:not(:disabled) {
+    @apply motion-safe:scale-[0.97];
+  }
+  .btn-primary {
+    @apply bg-teal-600 text-white shadow-soft hover:bg-teal-700 hover:text-white motion-safe:hover:-translate-y-px;
+  }
+  .btn-adopt {
+    @apply bg-wine-600 text-white shadow-soft hover:bg-wine-700 hover:text-white motion-safe:hover:-translate-y-px;
+  }
+  .btn-whatsapp {
+    @apply bg-success text-white shadow-soft hover:bg-[#185633] hover:text-white;
+  }
+  .btn-outline {
+    @apply border-[1.5px] border-teal-600 bg-white text-teal-700 hover:bg-teal-100;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-teal-700 hover:bg-teal-100 hover:text-teal-700;
+  }
+  .btn-ghost-light {
+    @apply border border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white;
+  }
+  .btn-danger {
+    @apply bg-danger text-white shadow-soft hover:bg-[#8f1e18] hover:text-white;
+  }
+  .btn-outline-danger {
+    @apply border-[1.5px] border-danger/40 bg-white text-danger hover:bg-danger-bg hover:text-danger;
+  }
+  .btn-sm {
+    @apply min-h-9 px-4 py-1.5 text-xs;
+  }
+  .btn-icon {
+    @apply size-11 p-0;
+  }
+  .btn-label-idle,
+  .btn-label-busy {
+    @apply inline-flex items-center gap-2;
+  }
+  .btn.is-loading {
+    @apply pointer-events-none;
+  }
+  .btn.is-loading .btn-label-idle,
+  .btn:not(.is-loading) .btn-label-busy {
+    @apply hidden;
+  }
+
+  /* Surfaces */
+  .card {
+    @apply rounded-2xl border border-line bg-white shadow-soft;
+  }
+  .card-pad {
+    @apply p-5 sm:p-6;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.06em] text-ink-muted uppercase;
+  }
+
+  /* Page header */
+  .page-header {
+    @apply mb-6 flex flex-wrap items-end justify-between gap-4;
+  }
+  .page-title {
+    @apply text-2xl font-extrabold sm:text-3xl;
+  }
+  .page-subtitle {
+    @apply mt-1 max-w-[60ch] text-ink-muted;
+  }
+
+  /* Forms */
+  .field {
+    @apply mb-5;
+  }
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-plum-900;
+  }
+  .field-help {
+    @apply mt-1.5 text-sm text-ink-muted;
+  }
+  .field-error {
+    @apply mt-1.5 flex items-center gap-1.5 text-sm font-medium text-danger;
+  }
+  .input,
+  .select,
+  .textarea {
+    @apply block min-h-12 w-full rounded-xl border-[1.5px] border-line-strong bg-white px-4 text-ink shadow-none transition duration-150 placeholder:text-ink-muted focus:border-teal-600 focus:ring-4 focus:ring-teal-600/30;
+  }
+  .textarea {
+    @apply min-h-30 py-3;
+  }
+  .input[aria-invalid="true"],
+  .select[aria-invalid="true"],
+  .textarea[aria-invalid="true"] {
+    @apply border-danger bg-danger-bg/40 focus:border-danger focus:ring-danger/25;
+  }
+
+  /* Photo upload with preview */
+  .photo-drop {
+    @apply relative flex aspect-[4/3] w-full max-w-sm cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border-2 border-dashed border-line-strong bg-white p-6 text-center text-ink-muted transition hover:border-teal-600 hover:bg-teal-100/50;
+  }
+  .photo-drop:focus-within,
+  .photo-drop.is-dragging {
+    @apply border-teal-600 bg-teal-100;
+  }
+  .photo-drop:has(:focus-visible) {
+    outline: 3px solid var(--color-teal-600);
+    outline-offset: 2px;
+  }
+  .photo-drop__preview {
+    @apply absolute inset-0 size-full object-cover motion-safe:animate-fade-in;
+  }
+
+  /* Badges and chips */
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap;
+  }
+  .badge-pending {
+    @apply bg-warning-bg text-warning;
+  }
+  .badge-approved {
+    @apply bg-success-bg text-success;
+  }
+  .badge-rejected {
+    @apply bg-neutral-bg text-neutral;
+  }
+  .badge-withdrawn {
+    @apply border border-dashed border-line-strong bg-transparent text-ink-muted;
+  }
+  .badge-available {
+    @apply bg-teal-100 text-teal-700;
+  }
+  .badge-adopted {
+    @apply bg-success-bg text-success;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-plum-100 bg-plum-50 px-3 py-1 text-xs font-semibold text-plum-700;
+  }
+
+  /* Avatar with initials */
+  .avatar {
+    @apply inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-honey-400 font-display text-sm font-extrabold text-plum-900;
+  }
+  .avatar-lg {
+    @apply size-18 text-2xl;
+  }
+
+  /* Sidebar navigation */
+  .nav-link {
+    @apply relative flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium text-[#e9dce6] no-underline transition hover:bg-white/8 hover:text-white;
+  }
+  .nav-link i {
+    @apply w-5 text-center;
+  }
+  .nav-link[aria-current="page"] {
+    @apply bg-white/12 text-white;
+  }
+  .nav-link[aria-current="page"] i {
+    @apply text-honey-400;
+  }
+  .nav-link[aria-current="page"]::before {
+    @apply absolute top-2 bottom-2 -left-3 w-[3px] rounded-r-full bg-honey-400 content-[''];
+  }
+  .nav-group {
+    @apply mt-6 mb-2 px-3 text-[0.6875rem] font-semibold tracking-[0.08em] text-on-dark-muted uppercase;
+  }
+
+  /* Pet card */
+  .pet-card {
+    @apply relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-soft transition duration-200;
+  }
+  .pet-card:hover,
+  .pet-card:focus-within {
+    @apply shadow-lift motion-safe:-translate-y-1;
+  }
+  .pet-card__media {
+    @apply relative aspect-[4/3] overflow-hidden bg-plum-50;
+  }
+  .pet-card__media img {
+    @apply size-full object-cover transition duration-300;
+  }
+  .pet-card:hover .pet-card__media img,
+  .pet-card:focus-within .pet-card__media img {
+    @apply motion-safe:scale-[1.04];
+  }
+  .overlay-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-white/92 px-2.5 py-1 text-xs font-semibold text-plum-900 shadow-soft backdrop-blur-sm;
+  }
+
+  /* Lists of rows (my pets, sent requests) */
+  .list-row {
+    @apply flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:p-5;
+  }
+  .list-row + .list-row {
+    @apply border-t border-line;
+  }
+  .thumb {
+    @apply size-18 shrink-0 rounded-xl bg-plum-50 object-cover;
+  }
+
+  /* Speech bubble for an adopter's message */
+  .bubble {
+    @apply rounded-[1rem_0.25rem_1rem_1rem] bg-sunken px-4 py-3 text-sm text-ink;
+  }
+
+  /* Toasts */
+  .toast-stack {
+    @apply pointer-events-none fixed inset-x-4 top-4 z-50 flex flex-col gap-3 sm:inset-x-auto sm:right-6 sm:w-96;
+  }
+  .toast {
+    @apply pointer-events-auto flex items-start gap-3 rounded-xl border border-line border-l-4 bg-white p-4 text-sm shadow-lift motion-safe:animate-toast-in;
+  }
+  .toast.is-leaving {
+    @apply opacity-0 motion-safe:transition-opacity motion-safe:duration-200;
+  }
+  .toast-success {
+    @apply border-l-success;
+  }
+  .toast-info {
+    @apply border-l-info;
+  }
+  .toast-warning {
+    @apply border-l-honey-400;
+  }
+  .toast-error {
+    @apply border-l-danger;
+  }
+
+  /* Native <dialog>: confirmation and the mobile menu */
+  .dialog {
+    @apply m-auto w-[min(28rem,calc(100%-2rem))] rounded-2xl border border-line bg-white p-0 text-ink shadow-lift backdrop:bg-plum-900/50 backdrop:backdrop-blur-[2px];
+  }
+  .dialog[open] {
+    @apply motion-safe:animate-rise;
+  }
+  .drawer {
+    @apply m-0 h-dvh max-h-dvh w-[min(18rem,85vw)] max-w-none border-0 bg-plum-900 p-0 backdrop:bg-plum-900/50;
+  }
+
+  /* Stagger the entrance of a grid or list: up to twelve children */
+  .stagger > * {
+    @apply motion-safe:animate-rise;
+  }
+  .stagger > :nth-child(2) { animation-delay: 40ms; }
+  .stagger > :nth-child(3) { animation-delay: 80ms; }
+  .stagger > :nth-child(4) { animation-delay: 120ms; }
+  .stagger > :nth-child(5) { animation-delay: 160ms; }
+  .stagger > :nth-child(6) { animation-delay: 200ms; }
+  .stagger > :nth-child(7) { animation-delay: 240ms; }
+  .stagger > :nth-child(8) { animation-delay: 280ms; }
+  .stagger > :nth-child(9) { animation-delay: 320ms; }
+  .stagger > :nth-child(10) { animation-delay: 360ms; }
+  .stagger > :nth-child(11) { animation-delay: 400ms; }
+  .stagger > :nth-child(n + 12) { animation-delay: 440ms; }
+
+  /* Images fade in over their plum placeholder once loaded (the class is set by JS only) */
+  img.is-loading {
+    @apply opacity-0;
+  }
+  img.is-loaded {
+    @apply motion-safe:animate-fade-in;
+  }
+
+  /* Paw burst on the approved panel */
+  .burst {
+    @apply pointer-events-none absolute top-8 left-8;
+  }
+  .burst span {
+    @apply absolute text-honey-400 opacity-0;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .burst span {
+      animation: burst 900ms var(--ease-out-quint) 200ms both;
+    }
+  }
+  .burst span:nth-child(1) { --burst-x: -38px; --burst-y: -30px; --burst-r: -25deg; }
+  .burst span:nth-child(2) { --burst-x: 6px; --burst-y: -46px; --burst-r: 10deg; }
+  .burst span:nth-child(3) { --burst-x: 44px; --burst-y: -26px; --burst-r: 30deg; }
+  .burst span:nth-child(4) { --burst-x: -46px; --burst-y: 10px; --burst-r: -40deg; }
+  .burst span:nth-child(5) { --burst-x: 48px; --burst-y: 14px; --burst-r: 35deg; }
+  .burst span:nth-child(6) { --burst-x: 2px; --burst-y: 38px; --burst-r: 5deg; }
+
+  /* Paw-print pattern for dark hero panels */
+  .paw-pattern {
+    background-image: url("../img/paw-pattern.svg");
+    background-size: 120px 120px;
+  }
+}
+
+/*
+ * Tom Select, restyled to match the inputs. Outside any layer on purpose: its own stylesheet is
+ * unlayered, and layered rules always lose to unlayered ones, whatever their specificity.
+ */
+.ts-wrapper.select,
+.ts-wrapper.input {
+  @apply min-h-0 border-0 bg-transparent p-0 ring-0;
+}
+.ts-wrapper .ts-control input {
+  @apply min-h-0 border-0 p-0 shadow-none ring-0 focus:ring-0;
+}
+.ts-wrapper .ts-control {
+  @apply min-h-12 rounded-xl border-[1.5px] border-line-strong bg-white px-3 py-2 text-base shadow-none;
+}
+.ts-wrapper.focus .ts-control {
+  @apply border-teal-600 ring-4 ring-teal-600/30;
+}
+.ts-wrapper.multi .ts-control > .item .remove {
+  @apply inline-flex min-h-6 min-w-6 items-center justify-center border-0;
+}
+.ts-wrapper.multi .ts-control > .item {
+  @apply rounded-full border border-plum-100 bg-plum-50 px-2.5 py-0.5 text-xs font-semibold text-plum-700;
+}
+.ts-dropdown {
+  @apply mt-1 overflow-hidden rounded-xl border border-line bg-white text-sm shadow-lift;
+}
+.ts-dropdown .active {
+  @apply bg-teal-100 text-teal-700;
+}

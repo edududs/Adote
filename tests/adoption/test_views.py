@@ -251,7 +251,9 @@ def test_the_board_filters_by_tag_and_paginates(
     assert len(second.context["page"].object_list) == 2
     tagged = client.get(reverse("adoption:board"), {"tag": str(tag_ids[0])})
     assert len(tagged.context["page"].object_list) == 7
-    assert "tag=" in tagged.context["query"]
+    # {% querystring %} keeps the filters in the page links
+    filtered = client.get(reverse("adoption:board"), {"species": "dog"}).content.decode()
+    assert "?species=dog&amp;pagina=2" in filtered
 
 
 # The dashboard

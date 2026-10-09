@@ -1,25 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
 {% block body %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-5 bg-side min-vh-100">
-      <header class="brand-header">
-        <img src="{% static 'adote/img/logo.png' %}" alt="" width="48" height="48">
-        <span class="font-logo">ADO.TE</span>
-      </header>
-      <div class="body-form">
-        {% include "partials/_messages.html" %}
-        {% block content %}{% endblock %}
-      </div>
+<div class="min-h-dvh lg:grid lg:grid-cols-2">
+  <section class="relative isolate flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-plum-900 to-plum-700 px-6 pt-10 pb-16 text-center text-white lg:order-2 lg:min-h-dvh lg:py-16" aria-label="Sobre o Adote">
+    <div class="paw-pattern absolute inset-0 -z-10" aria-hidden="true"></div>
+    <img src="{% static 'adote/img/logo.png' %}" alt="Logotipo do Adote: um cachorro e um gato abraçados" class="size-20 motion-safe:animate-float lg:size-44">
+    <p class="mt-4 font-display text-3xl font-extrabold lg:text-5xl">ADO<span class="text-honey-400">.</span>TE</p>
+    <p class="mt-2 max-w-sm font-display text-lg font-bold lg:text-2xl">Todo pet merece um lar.</p>
+    <p class="mt-3 hidden max-w-md text-on-dark-muted lg:block">Quem resgata divulga, quem quer adotar pede, e juntos a gente muda uma vida.</p>
+    <ol class="mt-10 hidden gap-6 text-sm lg:flex">
+      <li class="flex flex-col items-center gap-2"><span class="flex size-12 items-center justify-center rounded-full bg-white/10"><i class="fa-solid fa-magnifying-glass text-honey-400" aria-hidden="true"></i></span>Encontre</li>
+      <li class="flex flex-col items-center gap-2"><span class="flex size-12 items-center justify-center rounded-full bg-white/10"><i class="fa-solid fa-envelope-open-text text-honey-400" aria-hidden="true"></i></span>Peça</li>
+      <li class="flex flex-col items-center gap-2"><span class="flex size-12 items-center justify-center rounded-full bg-white/10"><i class="fa-solid fa-house-chimney text-honey-400" aria-hidden="true"></i></span>Leve para casa</li>
+    </ol>
+  </section>
+  <main id="conteudo" class="relative -mt-8 flex items-start justify-center px-4 pb-12 lg:order-1 lg:mt-0 lg:items-center lg:py-12">
+    <div class="card w-full {% block card_width %}max-w-md{% endblock %} p-6 motion-safe:animate-rise sm:p-10">
+      {% block content %}{% endblock %}
     </div>
-    <div class="col-lg-7 d-none d-lg-block">
-      <div class="side-logo">
-        <img src="{% static 'adote/img/logo.png' %}" alt="Logotipo do Adote" width="160">
-        <h1>ADO.TE</h1>
-        <p>Nos ajude a salvar vidas.</p>
-      </div>
-    </div>
-  </div>
+  </main>
 </div>
 {% endblock %}

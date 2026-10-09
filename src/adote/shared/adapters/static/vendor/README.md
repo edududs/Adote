@@ -6,11 +6,15 @@ Comentários `sourceMappingURL` foram removidos, porque os mapas não são copia
 
 | Pasta | Pacote npm | Licença |
 |---|---|---|
-| `bootstrap-5.3.3/` | `bootstrap@5.3.3` | MIT |
-| `jquery-3.7.1/` | `jquery@3.7.1` | MIT |
-| `select2-4.1.0-rc.0/` | `select2@4.1.0-rc.0` | MIT |
-| `jquery-mask-1.14.16/` | `jquery-mask-plugin@1.14.16` | MIT |
-| `chartjs-4.4.4/` | `chart.js@4.4.4` | MIT |
+| `tom-select-2.6.2/` | `tom-select@2.6.2` (build `complete`, com plugins) | Apache-2.0 |
+| `chartjs-4.5.1/` | `chart.js@4.5.1` | MIT |
+| `fontawesome-7.3.1/` | `@fortawesome/fontawesome-free@7.3.1` (CSS e webfonts) | Ícones CC BY 4.0, fontes OFL 1.1, código MIT |
+| `fontsource-nunito-5.3.0/` | `@fontsource-variable/nunito@5.3.0` (latin, eixo de peso) | OFL 1.1 |
+| `fontsource-inter-5.3.0/` | `@fontsource-variable/inter@5.3.0` (latin, eixo de peso) | OFL 1.1 |
+
+O CSS do app é Tailwind, compilado de `assets/css/app.css` (ver `package.json`); não há Bootstrap
+nem jQuery. O select de múltipla escolha é o Tom Select; máscaras, menu, diálogos e avisos são JS puro
+em `static/adote/js/`.
 
 Para atualizar: `npm pack <pacote>@<versão>`, copie os mesmos arquivos para uma pasta com a nova
-versão no nome, troque os caminhos em `templates/base.html` (ou no template que usa) e apague a pasta antiga.
+versão no nome, troque os caminhos nos templates (ou em `css/fonts.css`) e apague a pasta antiga.

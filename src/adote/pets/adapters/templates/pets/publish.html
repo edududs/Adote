@@ -1,30 +1,55 @@
 {% extends "app.html" %}
+{% load static %}
 {% block title %}Divulgar pet{% endblock %}
+{% block scripts %}<script src="{% static 'adote/js/photo.js' %}" defer></script>{% endblock %}
 {% block content %}
-<div class="box">
-  <h2 class="font-vinho">Quero divulgar</h2>
-  <p class="text-muted">Conte quem é o pet. Quem quiser adotar envia um pedido, e você decide.</p>
-  <hr>
-  <form method="post" enctype="multipart/form-data" novalidate>
-    {% csrf_token %}
-    {% include "partials/_form_errors.html" %}
-    {% with field=form.photo %}{% include "partials/_field.html" %}{% endwith %}
-    <div class="row">
-      <div class="col-md-6">{% with field=form.name %}{% include "partials/_field.html" %}{% endwith %}</div>
-      <div class="col-md-3">{% with field=form.species %}{% include "partials/_field.html" %}{% endwith %}</div>
-      <div class="col-md-3">{% with field=form.sex %}{% include "partials/_field.html" %}{% endwith %}</div>
+{% include "partials/ui.html#page-header" with eyebrow="Quero divulgar" title="Divulgar um pet" subtitle="Conte quem ele é. Quem quiser adotar envia um pedido, e você escolhe a melhor família." %}
+<form method="post" enctype="multipart/form-data" novalidate data-loading class="max-w-4xl space-y-6">
+  {% csrf_token %}
+  {% include "partials/ui.html#form-errors" %}
+
+  <section class="card card-pad motion-safe:animate-rise" aria-labelledby="secao-pet">
+    <h2 id="secao-pet" class="mb-5 flex items-center gap-2 text-lg font-extrabold"><i class="fa-solid fa-paw text-wine-600" aria-hidden="true"></i>Quem é o pet</h2>
+    <div class="grid gap-6 md:grid-cols-[minmax(0,22rem)_1fr]">
+      <div class="field">
+        <span class="field-label" id="photo-label">{{ form.photo.label }} <span class="text-wine-600" aria-hidden="true">*</span><span class="sr-only">(obrigatório)</span></span>
+        <label class="photo-drop" for="{{ form.photo.id_for_label }}" data-photo-drop>
+          <img class="photo-drop__preview hidden" alt="Prévia da foto escolhida" data-photo-preview>
+          <span class="flex size-14 items-center justify-center rounded-full bg-plum-50 text-plum-500"><i class="fa-solid fa-camera text-xl" aria-hidden="true"></i></span>
+          <span class="font-semibold text-plum-900">Escolha uma foto</span>
+          <span class="text-sm">ou arraste para cá</span>
+          <span class="chip absolute right-3 bottom-3 hidden" data-photo-change><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>Trocar foto</span>
+          {{ form.photo }}
+        </label>
+        <p class="field-help" id="{{ form.photo.auto_id }}_helptext">{{ form.photo.help_text }}</p>
+        <p class="field-error hidden" id="photo-client-error" data-photo-error role="alert"></p>
+        {% if form.photo.errors %}<div id="{{ form.photo.auto_id }}_error">{% for error in form.photo.errors %}<p class="field-error"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ error }}</p>{% endfor %}</div>{% endif %}
+      </div>
+      <div>
+        {{ form.name.as_field_group }}
+        <div class="grid gap-x-4 sm:grid-cols-2">
+          {{ form.species.as_field_group }}
+          {{ form.sex.as_field_group }}
+        </div>
+        {{ form.breed.as_field_group }}
+        {{ form.tags.as_field_group }}
+      </div>
     </div>
-    <div class="row">
-      <div class="col-md-6">{% with field=form.breed %}{% include "partials/_field.html" %}{% endwith %}</div>
-      <div class="col-md-6">{% with field=form.tags %}{% include "partials/_field.html" %}{% endwith %}</div>
+    {{ form.description.as_field_group }}
+  </section>
+
+  <section class="card card-pad motion-safe:animate-rise [animation-delay:80ms]" aria-labelledby="secao-local">
+    <h2 id="secao-local" class="mb-5 flex items-center gap-2 text-lg font-extrabold"><i class="fa-solid fa-location-dot text-wine-600" aria-hidden="true"></i>Onde está e como falar com você</h2>
+    <div class="grid gap-x-4 sm:grid-cols-[12rem_1fr]">
+      {{ form.state.as_field_group }}
+      {{ form.city.as_field_group }}
     </div>
-    {% with field=form.description %}{% include "partials/_field.html" %}{% endwith %}
-    <div class="row">
-      <div class="col-md-4">{% with field=form.state %}{% include "partials/_field.html" %}{% endwith %}</div>
-      <div class="col-md-8">{% with field=form.city %}{% include "partials/_field.html" %}{% endwith %}</div>
-    </div>
-    {% with field=form.contact_phone %}{% include "partials/_field.html" %}{% endwith %}
-    <button type="submit" class="btn btn-custom-primary btn-lg">Divulgar</button>
-  </form>
-</div>
+    {{ form.contact_phone.as_field_group }}
+  </section>
+
+  <button type="submit" class="btn btn-adopt w-full sm:w-auto">
+    <span class="btn-label-idle"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i>Publicar pet</span>
+    <span class="btn-label-busy"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Publicando…</span>
+  </button>
+</form>
 {% endblock %}

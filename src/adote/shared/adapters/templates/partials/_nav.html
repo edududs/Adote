@@ -1,30 +1,29 @@
 {% load static %}
-<nav class="col-md-3 col-lg-2 d-md-block bg-side sidebar py-4" aria-label="Menu principal">
-  <a class="d-flex align-items-center gap-2 text-white text-decoration-none mb-3" href="{% url 'adoption:board' %}">
-    <img src="{% static 'adote/img/logo.png' %}" alt="" width="36" height="36"><span class="fs-3">ADO.TE</span>
-  </a>
-  <hr>
-  <ul class="nav flex-column gap-1">
-    {% url 'adoption:board' as board_url %}
-    {% url 'pets:publish' as publish_url %}
-    {% url 'adoption:my_pets' as my_pets_url %}
-    {% url 'adoption:received' as received_url %}
-    {% url 'adoption:sent' as sent_url %}
-    {% url 'adoption:dashboard' as dashboard_url %}
-    {% url 'accounts:profile' as profile_url %}
-    <li class="nav-item"><a class="nav-link text-white{% if request.path == board_url %} active fw-bold{% endif %}" href="{{ board_url }}"><i class="fa-solid fa-paw me-2"></i>Adotar</a></li>
-    <li class="nav-item"><a class="nav-link text-white{% if request.path == publish_url %} active fw-bold{% endif %}" href="{{ publish_url }}"><i class="fa-solid fa-plus me-2"></i>Divulgar pet</a></li>
-    <li class="nav-item"><a class="nav-link text-white{% if request.path == my_pets_url %} active fw-bold{% endif %}" href="{{ my_pets_url }}"><i class="fa-solid fa-house me-2"></i>Meus pets</a></li>
-    <li class="nav-item"><a class="nav-link text-white{% if request.path == received_url %} active fw-bold{% endif %}" href="{{ received_url }}"><i class="fa-solid fa-inbox me-2"></i>Pedidos recebidos</a></li>
-    <li class="nav-item"><a class="nav-link text-white{% if request.path == sent_url %} active fw-bold{% endif %}" href="{{ sent_url }}"><i class="fa-solid fa-paper-plane me-2"></i>Meus pedidos</a></li>
-    <li class="nav-item"><a class="nav-link text-white{% if request.path == dashboard_url %} active fw-bold{% endif %}" href="{{ dashboard_url }}"><i class="fa-solid fa-chart-column me-2"></i>Painel</a></li>
-    <li class="nav-item"><a class="nav-link text-white{% if request.path == profile_url %} active fw-bold{% endif %}" href="{{ profile_url }}"><i class="fa-solid fa-user me-2"></i>Perfil</a></li>
-  </ul>
-  <hr>
-  <p class="small mb-2">{{ request.user.get_full_name|default:request.user.username }}</p>
+{% with current=request.resolver_match.view_name %}
+<a href="{% url 'adoption:board' %}" class="mb-2 flex items-center gap-3 px-3 font-display text-2xl font-extrabold text-white no-underline">
+  <img src="{% static 'adote/img/logo.png' %}" alt="" width="40" height="40" class="motion-safe:transition motion-safe:hover:rotate-[-8deg]"><span>ADO<span class="text-honey-400">.</span>TE</span>
+</a>
+<nav aria-label="Menu principal" class="flex-1 overflow-y-auto">
+  <p class="nav-group">Quero adotar</p>
+  <a class="nav-link" href="{% url 'adoption:board' %}"{% if current == "adoption:board" %} aria-current="page"{% endif %}><i class="fa-solid fa-paw" aria-hidden="true"></i>Mural de pets</a>
+  <a class="nav-link" href="{% url 'adoption:sent' %}"{% if current == "adoption:sent" %} aria-current="page"{% endif %}><i class="fa-solid fa-paper-plane" aria-hidden="true"></i>Meus pedidos</a>
+  <p class="nav-group">Quero divulgar</p>
+  <a class="nav-link" href="{% url 'pets:publish' %}"{% if current == "pets:publish" %} aria-current="page"{% endif %}><i class="fa-solid fa-circle-plus" aria-hidden="true"></i>Divulgar pet</a>
+  <a class="nav-link" href="{% url 'adoption:my_pets' %}"{% if current == "adoption:my_pets" %} aria-current="page"{% endif %}><i class="fa-solid fa-house-chimney" aria-hidden="true"></i>Meus pets</a>
+  <a class="nav-link" href="{% url 'adoption:received' %}"{% if current == "adoption:received" or current == "adoption:adopter" %} aria-current="page"{% endif %}><i class="fa-solid fa-inbox" aria-hidden="true"></i>Pedidos recebidos</a>
+  <p class="nav-group">Conta</p>
+  <a class="nav-link" href="{% url 'adoption:dashboard' %}"{% if current == "adoption:dashboard" %} aria-current="page"{% endif %}><i class="fa-solid fa-chart-simple" aria-hidden="true"></i>Painel</a>
+  <a class="nav-link" href="{% url 'accounts:profile' %}"{% if current|slice:":9" == "accounts:" %} aria-current="page"{% endif %}><i class="fa-solid fa-user" aria-hidden="true"></i>Perfil</a>
+</nav>
+<div class="mt-4 border-t border-white/15 pt-4">
+  <div class="mb-3 flex items-center gap-3 px-1">
+    {% include "partials/ui.html#avatar" with person=request.user %}
+    <span class="truncate text-sm font-medium">{{ request.user.get_full_name|default:request.user.username }}</span>
+  </div>
   <form method="post" action="{% url 'accounts:logout' %}">
     {% csrf_token %}
-    <button type="submit" class="btn btn-custom-primary btn-sm w-100">Sair</button>
+    <button type="submit" class="btn btn-ghost-light btn-sm w-full"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>Sair</button>
   </form>
-  <p class="small text-white-50 mt-3 mb-0">v{{ adote_version }}</p>
-</nav>
+  <p class="mt-3 px-1 text-xs text-on-dark-muted">Adote v{{ adote_version }}</p>
+</div>
+{% endwith %}

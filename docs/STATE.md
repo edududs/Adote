@@ -13,7 +13,9 @@ seção "Não lançado" no changelog):
 - 210+ testes, cobertura de 98%, máquina de estados do Hypothesis contra o banco real, suíte
   repetida em Postgres no CI;
 - documentação, processo de versão e CI;
-- prints de todas as telas em [screens/](screens/README.md), gerados por `uv run poe screens`.
+- prints de todas as telas em [screens/](screens/README.md), gerados por `uv run poe screens`;
+- Django 6.1 com `MAILERS`, Tasks framework e `LoginRequiredMiddleware`;
+- visual refeito com Tailwind 4, sem Bootstrap nem jQuery (ADR 0011).
 
 ## Próximo passo
 

@@ -30,3 +30,4 @@ db.sqlite3-journal
 .idea/
 .vscode/
 .DS_Store
+node_modules/

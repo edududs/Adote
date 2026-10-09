@@ -9,7 +9,8 @@ uv run poe setup     # banco local e semente de demonstração
 uv run poe serve     # http://127.0.0.1:8000
 ```
 
-`uv run poe` sem argumentos lista todas as tarefas.
+`uv run poe` sem argumentos lista todas as tarefas. Para mexer no visual, rode `npm ci` uma vez e
+`uv run poe css-watch` enquanto trabalha: o CSS é Tailwind, compilado para `static/adote/css/app.css`.
 
 ## O portão
 
