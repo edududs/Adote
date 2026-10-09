@@ -18,7 +18,9 @@ ignore = [
 
 [lint.per-file-ignores]
 # pytest idiom: bare asserts, literal expected values, literal test passwords, fixtures by name
-"tests/**" = ["S101", "PLR2004", "S105", "S106", "ARG001", "PLR0913", "INP001"]
+"tests/**" = ["S101", "PLR2004", "S105", "S106", "ARG001", "ARG002", "PLR0913", "PLR0917", "FBT001", "INP001"]
+# the state machine checks errors raised mid-sequence, where pytest.raises cannot wrap a single call
+"tests/adoption/machine.py" = ["PT017"]
 # Django hands `request` to every view and `sender`/`kwargs` to every signal, used or not
 "src/adote/*/adapters/**" = ["ARG001", "ARG002"]
 # Django's idioms: class-level Meta lists, admin tuples and form field declarations are not shared state

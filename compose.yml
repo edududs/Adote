@@ -22,6 +22,8 @@ services:
 
   db:
     image: postgres:18-alpine
+    ports:
+      - "127.0.0.1:5432:5432"  # for `poe test-postgres` from the host
     environment:
       POSTGRES_DB: adote
       POSTGRES_USER: adote

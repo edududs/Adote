@@ -14,6 +14,11 @@ cmd = "pyright"
 help = "Every test, measuring coverage; fails below the floor"
 cmd = "pytest --cov=src/adote --cov-report=term-missing:skip-covered --cov-fail-under=95"
 
+[tasks.test-postgres]
+help = "Every test again on Postgres. TEST_DATABASE_URL must point to a server, e.g. `docker compose up db`"
+cmd = "pytest --create-db -p no:cacheprovider"
+env = { TEST_DATABASE_URL.default = "postgres://adote:adote@127.0.0.1:5432/adote" }
+
 [tasks.migrations-check]
 help = "Fail if a model changed without a migration"
 cmd = "python manage.py makemigrations --check --dry-run"
