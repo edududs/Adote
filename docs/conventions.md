@@ -50,8 +50,11 @@ As regras que valem em todo o código. São poucas, e todas são conferidas por 
   tarefas em `poe_tasks.toml`.
 - O app Django de cada contexto (models, migrations, views, templates, admin) mora em `adapters/`,
   com `label` curto. `adapters/composition.py` é o único lugar que instancia casos de uso.
-- View: decorador de método HTTP (`require_GET`/`require_POST`), `login_required`, traduz erro de
-  domínio em mensagem ou 404. Sem regra de negócio em view nem em template.
+- Login é exigido por padrão (`LoginRequiredMiddleware`); view pública leva `@login_not_required`
+  e entra na lista `PUBLIC` de `tests/test_project.py`.
+- View: decorador de método HTTP (`require_GET`/`require_POST`), traduz erro de domínio em mensagem
+  ou 404. Sem regra de negócio em view nem em template.
+- API do Django mais nova que os stubs de tipo entra por `shared/adapters/compat.py`, tipada.
 - Formulário herda de `BootstrapForm` e converte a entrada em value objects nos `clean_*`.
 - Dado de referência (raças, características) entra por migração de dados, nunca por sinal.
 

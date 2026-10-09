@@ -73,7 +73,7 @@ def test_events_about_people_or_pets_that_are_gone_send_nothing(db: None) -> Non
 
 def test_a_mail_failure_is_logged_and_never_reaches_the_person(caplog: pytest.LogCaptureFixture) -> None:
     with (
-        override_settings(EMAIL_BACKEND="tests.adoption.test_notifier.BrokenBackend"),
+        override_settings(MAILERS={"default": {"BACKEND": "tests.adoption.test_notifier.BrokenBackend"}}),
         caplog.at_level(logging.ERROR, logger="adote.shared.adapters.mail"),
     ):
         DjangoMailer().send(to="a@example.com", subject="s", body="b")

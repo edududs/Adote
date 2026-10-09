@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
@@ -8,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 
 from adote.accounts.domain import AccountError, EmailTakenError, PhoneTakenError, UsernameTakenError
+from adote.shared.adapters.compat import login_not_required
 
 from .composition import register_account, update_profile
 from .forms import LoginForm, PasswordForm, ProfileForm, SignUpForm
@@ -22,10 +22,11 @@ TAKEN: dict[type[AccountError], tuple[str, str]] = {
 
 def _signed_in(request: HttpRequest) -> User:
     user = request.user
-    assert isinstance(user, User)  # noqa: S101 - every caller is behind login_required
+    assert isinstance(user, User)  # noqa: S101 - LoginRequiredMiddleware guards every view here
     return user
 
 
+@login_not_required
 @require_http_methods(["GET", "POST"])
 def signup(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
@@ -70,13 +71,11 @@ class ChangePasswordView(PasswordChangeView):
         return super().form_valid(form)
 
 
-@login_required
 @require_http_methods(["GET"])
 def profile(request: HttpRequest) -> HttpResponse:
     return render(request, "accounts/profile.html", {"account": _signed_in(request)})
 
 
-@login_required
 @require_http_methods(["GET", "POST"])
 def edit_profile(request: HttpRequest) -> HttpResponse:
     user = _signed_in(request)

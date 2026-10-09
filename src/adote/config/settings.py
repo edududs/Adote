@@ -66,6 +66,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # Every view needs a signed-in account unless it is marked @login_not_required (Django 5.1+).
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.csp.ContentSecurityPolicyMiddleware",
@@ -146,18 +148,33 @@ MESSAGE_TAGS = {
     messages.ERROR: "alert-danger",
 }
 
-# E-mail: printed to the console unless an SMTP host is configured.
+# E-mail (Django 6.1 MAILERS): printed to the console unless an SMTP host is configured. The deploy
+# checklist refuses a console mailer, so production cannot silently drop every message.
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
-EMAIL_BACKEND = (
-    "django.core.mail.backends.smtp.EmailBackend"
-    if EMAIL_HOST
-    else "django.core.mail.backends.console.EmailBackend"
-)
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", default=True)
-EMAIL_TIMEOUT = 10
+MAILERS: dict[str, dict[str, Any]] = {
+    "default": (
+        {
+            "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+            "OPTIONS": {
+                "host": EMAIL_HOST,
+                "port": int(os.environ.get("EMAIL_PORT", "587")),
+                "username": os.environ.get("EMAIL_HOST_USER", ""),
+                "password": os.environ.get("EMAIL_HOST_PASSWORD", ""),
+                "use_tls": env_bool("EMAIL_USE_TLS", default=True),
+                "timeout": 10,
+            },
+        }
+        if EMAIL_HOST
+        else {"BACKEND": "django.core.mail.backends.console.EmailBackend"}
+    )
+}
+del EMAIL_HOST  # deprecated as a setting name once MAILERS exists
+# Background tasks (Django 6 Tasks framework). E-mails are enqueued as tasks; the immediate backend
+# runs them in the request, and a worker backend can replace it without touching the code.
+TASKS: dict[str, dict[str, Any]] = {
+    "default": {"BACKEND": "django.tasks.backends.immediate.ImmediateBackend"}
+}
+
 # Absolute base of the links that go out in e-mails.
 SITE_URL = os.environ.get("ADOTE_SITE_URL", "http://localhost:8000")
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Adote <nao-responda@adote.local>")

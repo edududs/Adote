@@ -63,6 +63,8 @@ Decisão não se edita: cria-se outra e marca-se a antiga como `substituída por
 | D-043 | Bibliotecas de front servidas pela aplicação; CSP só `'self'` | decidido | [0006](0006-vendored-assets.md) |
 | D-044 | Configuração por ambiente, segura por padrão: debug é a exceção que se liga | decidido | |
 | D-045 | Falha de e-mail é registrada e nunca desfaz a ação | decidido | |
+| D-046 | Django 6.1: e-mail configurado por `MAILERS` (o `check --deploy` recusa o console em produção); e-mails enviados como tarefa do Tasks framework, com o backend imediato até existir um worker | decidido | |
+| D-047 | Login exigido por padrão com `LoginRequiredMiddleware`; rota pública é exceção marcada e listada num teste | decidido | |
 
 ## Qualidade e processo
 

@@ -1,7 +1,6 @@
 from uuid import UUID
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods, require_POST
@@ -23,11 +22,10 @@ from .forms import PetForm
 
 def _signed_in(request: HttpRequest) -> User:
     user = request.user
-    assert isinstance(user, User)  # noqa: S101 - every caller is behind login_required
+    assert isinstance(user, User)  # noqa: S101 - LoginRequiredMiddleware guards every view here
     return user
 
 
-@login_required
 @require_http_methods(["GET", "POST"])
 def publish(request: HttpRequest) -> HttpResponse:
     user = _signed_in(request)
@@ -50,7 +48,6 @@ def publish(request: HttpRequest) -> HttpResponse:
     return render(request, "pets/publish.html", {"form": form})
 
 
-@login_required
 @require_POST
 def remove(request: HttpRequest, pet_id: UUID) -> HttpResponse:
     try:

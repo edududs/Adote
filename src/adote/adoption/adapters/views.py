@@ -1,7 +1,6 @@
 from uuid import UUID
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
@@ -31,11 +30,10 @@ PAGE_SIZE = 12
 
 def _signed_in(request: HttpRequest) -> User:
     user = request.user
-    assert isinstance(user, User)  # noqa: S101 - every caller is behind login_required
+    assert isinstance(user, User)  # noqa: S101 - LoginRequiredMiddleware guards every view here
     return user
 
 
-@login_required
 @require_GET
 def board(request: HttpRequest) -> HttpResponse:
     form = BoardFilterForm(request.GET)
@@ -46,7 +44,6 @@ def board(request: HttpRequest) -> HttpResponse:
     return render(request, "adoption/board.html", {"form": form, "page": page, "query": query.urlencode()})
 
 
-@login_required
 @require_GET
 def pet(request: HttpRequest, pet_id: UUID) -> HttpResponse:
     viewer = _signed_in(request)
@@ -73,7 +70,6 @@ def pet(request: HttpRequest, pet_id: UUID) -> HttpResponse:
     return render(request, "adoption/pet.html", context)
 
 
-@login_required
 @require_POST
 def request_pet(request: HttpRequest, pet_id: UUID) -> HttpResponse:
     form = RequestForm(request.POST)
@@ -111,19 +107,16 @@ def _decide(request: HttpRequest, request_id: UUID, *, approve: bool) -> HttpRes
     return redirect("adoption:received")
 
 
-@login_required
 @require_POST
 def approve(request: HttpRequest, request_id: UUID) -> HttpResponse:
     return _decide(request, request_id, approve=True)
 
 
-@login_required
 @require_POST
 def reject(request: HttpRequest, request_id: UUID) -> HttpResponse:
     return _decide(request, request_id, approve=False)
 
 
-@login_required
 @require_POST
 def withdraw(request: HttpRequest, request_id: UUID) -> HttpResponse:
     try:
@@ -137,19 +130,16 @@ def withdraw(request: HttpRequest, request_id: UUID) -> HttpResponse:
     return redirect("adoption:sent")
 
 
-@login_required
 @require_GET
 def received(request: HttpRequest) -> HttpResponse:
     return render(request, "adoption/received.html", {"requests": queries.received(_signed_in(request).pk)})
 
 
-@login_required
 @require_GET
 def sent(request: HttpRequest) -> HttpResponse:
     return render(request, "adoption/sent.html", {"requests": queries.sent(_signed_in(request).pk)})
 
 
-@login_required
 @require_GET
 def adopter(request: HttpRequest, request_id: UUID) -> HttpResponse:
     row = queries.adopter_for_owner(request_id, _signed_in(request).pk)
@@ -158,19 +148,16 @@ def adopter(request: HttpRequest, request_id: UUID) -> HttpResponse:
     return render(request, "adoption/adopter.html", {"adoption_request": row})
 
 
-@login_required
 @require_GET
 def my_pets(request: HttpRequest) -> HttpResponse:
     return render(request, "adoption/my_pets.html", {"pets": queries.my_pets(_signed_in(request).pk)})
 
 
-@login_required
 @require_GET
 def dashboard(request: HttpRequest) -> HttpResponse:
     return render(request, "adoption/dashboard.html", {"totals": queries.totals()})
 
 
-@login_required
 @require_GET
 def dashboard_data(request: HttpRequest) -> JsonResponse:
     rows = queries.adoptions_by_breed()

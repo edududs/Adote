@@ -3,7 +3,7 @@ import re
 import subprocess
 import sys
 import tomllib
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from pathlib import Path
 from uuid import UUID
 
@@ -201,3 +201,41 @@ def test_profiles_show_the_phone_formatted(user_factory: Callable[..., User]) ->
     page = signed_in(user).get(reverse("accounts:profile")).content.decode()
     assert "(11) 98765-4321" in page
     assert "11987654321" not in page
+
+
+PUBLIC = {"accounts:login", "accounts:signup", "shared:health", "admin:login"}
+
+
+def _named_routes() -> list[tuple[str, int]]:
+    from django.urls import URLPattern, URLResolver, get_resolver  # noqa: PLC0415
+
+    found: list[tuple[str, int]] = []
+
+    def walk(patterns: Iterable[object], namespace: str) -> None:
+        for pattern in patterns:
+            if isinstance(pattern, URLResolver):
+                inner = f"{namespace}{pattern.namespace}:" if pattern.namespace else namespace
+                walk(pattern.url_patterns, inner)
+            elif isinstance(pattern, URLPattern) and pattern.name and not namespace.startswith("admin:"):
+                found.append((f"{namespace}{pattern.name}", len(pattern.pattern.converters)))
+
+    walk(get_resolver().url_patterns, "")
+    return found
+
+
+@pytest.mark.django_db
+def test_every_route_requires_login_except_the_public_ones() -> None:
+    from uuid import uuid4  # noqa: PLC0415
+
+    client = Client()
+    routes = _named_routes()
+    assert {name for name, _ in routes} >= PUBLIC - {"admin:login"}
+    for name, arguments in routes:
+        url = reverse(name, args=[uuid4()] * arguments)
+        status = client.get(url).status_code
+        if name in PUBLIC:
+            assert status == 200, name
+        else:
+            assert status in {302, 405}, name
+            if status == 302:
+                assert client.get(url)["Location"].startswith(reverse("accounts:login")), name

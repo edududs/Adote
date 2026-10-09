@@ -27,7 +27,7 @@ env = { DJANGO_DEBUG.default = "1" }
 [tasks.deploy-check]
 help = "Django's own production checklist, with the settings production would have"
 cmd = "python manage.py check --deploy --fail-level WARNING"
-env = { DJANGO_SECRET_KEY.default = "a-long-random-value-only-for-the-deploy-check-0123456789abcdefghij", DJANGO_ALLOWED_HOSTS.default = "adote.example.com" }
+env = { DJANGO_SECRET_KEY.default = "a-long-random-value-only-for-the-deploy-check-0123456789abcdefghij", DJANGO_ALLOWED_HOSTS.default = "adote.example.com", EMAIL_HOST.default = "smtp.example.com" }
 
 [tasks.fix]
 help = "Pipeline to run before calling work done: rewrites files, then checks types"

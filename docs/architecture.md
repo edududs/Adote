@@ -12,7 +12,7 @@ flowchart LR
     P -.CEP, só preenchimento.-> V[ViaCEP]
 ```
 
-Uma aplicação Django renderizada no servidor. Não há SPA nem API pública; o único JSON é o do gráfico
+Uma aplicação Django 6.1 renderizada no servidor. Não há SPA nem API pública; o único JSON é o do gráfico
 do painel. Todo script, estilo e fonte é servido pela própria aplicação (sem CDN), então a CSP só
 aceita `'self'`; a única origem externa é a consulta de CEP feita pelo navegador.
 
@@ -81,8 +81,12 @@ do agregado (`actions_for`), não do template.
 - **Configuração:** variáveis de ambiente (12-factor), seguras por padrão: sem `DJANGO_DEBUG=1`, a
   aplicação exige segredo e hosts e liga HSTS, cookies seguros e redirecionamento para HTTPS.
   Lista completa em [.env.example](../.env.example).
-- **E-mail:** porta `Mailer`; o adaptador usa o backend do Django (console sem `EMAIL_HOST`). Falha
-  de envio é registrada em log e nunca desfaz a ação que a causou.
+- **E-mail:** porta `Mailer`; o adaptador enfileira uma tarefa do Tasks framework do Django, que
+  envia pelo `MAILERS` (console sem `EMAIL_HOST`). Hoje a tarefa roda na própria requisição
+  (backend imediato); um worker troca isso só na configuração. Falha de envio é registrada em log e
+  nunca desfaz a ação que a causou.
+- **Login:** exigido por padrão (`LoginRequiredMiddleware`); só login, cadastro, `/saude/` e as fotos
+  são públicos.
 - **Tempo:** porta `Clock`; nada no domínio lê o relógio sozinho.
 - **Fotos:** porta `PhotoStore` sobre o storage padrão do Django, com nome aleatório; o formato é
   conferido pelo Pillow (JPEG, PNG, WEBP, até 5 MB).
