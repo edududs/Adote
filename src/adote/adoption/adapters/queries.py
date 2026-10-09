@@ -9,7 +9,6 @@ from uuid import UUID
 
 from django.db.models import Case, Count, Exists, IntegerField, OuterRef, Q, QuerySet, Value, When
 
-from adote.accounts.adapters.models import User
 from adote.adoption.domain import BLOCKING, RequestStatus
 from adote.pets.adapters.models import Breed, PetModel
 
@@ -112,13 +111,6 @@ def adopter_for_owner(request_id: UUID, owner_id: int) -> AdoptionRequestModel |
         .select_related("adopter", "pet")
         .first()
     )
-
-
-def adopter_of(pet_id: UUID) -> User | None:
-    request = (
-        AdoptionRequestModel.objects.filter(pet_id=pet_id, status=APPROVED).select_related("adopter").first()
-    )
-    return None if request is None else request.adopter
 
 
 @dataclass(frozen=True, slots=True)

@@ -84,6 +84,10 @@ class AdoptionProcess(FrozenModel):
     def pending(self) -> tuple[AdoptionRequest, ...]:
         return tuple(request for request in self.requests if request.status is RequestStatus.PENDING)
 
+    def requests_by_id(self) -> dict[RequestId, AdoptionRequest]:
+        """Requests keyed by id, in the order they were made."""
+        return {request.id: request for request in self.requests}
+
     def live_request_of(self, adopter_id: AccountId) -> AdoptionRequest | None:
         """The adopter's request that still counts: pending, approved or rejected."""
         return next(
