@@ -4,8 +4,8 @@
 
 ## Contexto
 
-O BrazCar usa casos de uso `async` porque é uma API ASGI com SSE. O Adote é renderizado no servidor,
-sem conexões longas, e o Django 6 ainda não tem transação em modo async.
+Casos de uso `async` compensam em APIs ASGI com conexões longas (SSE, WebSocket). O Adote é
+renderizado no servidor, sem conexões longas, e o Django 6 ainda não tem transação em modo async.
 
 ## Decisão
 

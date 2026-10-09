@@ -30,7 +30,7 @@ publicar é empurrar a tag.
 
    O workflow `release` confere que a versão do `pyproject.toml` é a da tag e cria a GitHub Release
    com as notas da tag.
-5. Atualize [STATE.md](../STATE.md) e faça o deploy ([deploy.md](deploy.md)).
+5. Atualize o estado atual no [ROADMAP.md](../ROADMAP.md) e faça o deploy ([deploy.md](deploy.md)).
 
 ## Se algo der errado
 

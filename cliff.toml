@@ -9,7 +9,8 @@ Formato conforme [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e v
 [SemVer](https://semver.org/lang/pt-BR/). Gerado pelo git-cliff a partir dos commits: não editar à mão.
 
 Antes da 1.0 o contrato ainda se move: `MINOR` traz funcionalidade e pode quebrar compatibilidade,
-`PATCH` é correção. Commits anteriores à adoção do Conventional Commits não aparecem aqui.
+`PATCH` é correção. Cada entrada reproduz o assunto do commit, escrito em inglês como todo o código.
+Commits anteriores à adoção do Conventional Commits não aparecem aqui.
 """
 body = """
 

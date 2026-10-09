@@ -4,7 +4,7 @@
 
 ## Contexto
 
-A versão de aprendizado tinha regra de negócio espalhada em views: aprovar um pedido era um `if` na
+A versão anterior tinha regra de negócio espalhada nas views: aprovar um pedido era um `if` na
 view, sem conferir quem aprovava; o "pet adotado" era um campo que a view mudava à mão. Testar uma
 regra exigia subir HTTP e banco, e não havia teste nenhum.
 
@@ -14,7 +14,7 @@ Domínio e aplicação em Python puro: entidades e value objects em Pydantic con
 como dataclasses que recebem portas (`Protocol`). O Django entra como adaptador: models, migrations,
 views, formulários e templates moram em `adapters/`, e `composition.py` liga casos de uso a
 adaptadores reais. Um teste lê a AST de `domain/` e `application/` e falha com qualquer import
-proibido. O desenho segue o do BrazCar, do mesmo autor.
+proibido.
 
 ## Consequências
 

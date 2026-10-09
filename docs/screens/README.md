@@ -15,7 +15,7 @@ Thor (pendentes), Ana pediu Luna (pendente), Carla teve Pipoca aprovada e Bruno 
 | 04 | [Mural de pets](#04-board) | Carla (adotante) | `/` |
 | 05 | [Mural filtrado](#05-board-filtered) | Carla (adotante) | `/?species=dog&state=DF` |
 | 06 | [Página do pet: pedir para adotar](#06-pet-request) | Carla (adotante) | `/pets/<id>/` |
-| 07 | [Página do pet: pedido em aberto](#07-pet-pending) | Carla (adotante) | `/pets/<id>/` |
+| 07 | [Página do pet: pedido pendente](#07-pet-pending) | Carla (adotante) | `/pets/<id>/` |
 | 08 | [Página do pet: pedido aprovado](#08-pet-approved) | Carla (adotante) | `/pets/<id>/` |
 | 09 | [Meus pedidos](#09-sent) | Carla (adotante) | `/pedidos/enviados/` |
 | 10 | [Divulgar um pet](#10-publish) | Ana (tutora) | `/pets/divulgar/` |
@@ -104,15 +104,15 @@ Quem ainda não pediu vê a descrição, as características e o painel do pedid
 
 <a id="07-pet-pending"></a>
 
-## 07. Página do pet: pedido em aberto
+## 07. Página do pet: pedido pendente
 
 **Quem:** Carla (adotante) · **Rota:** `/pets/<id>/`
 
 Com o pedido aguardando resposta, a página mostra a situação e permite cancelar.
 
-![Página do pet: pedido em aberto](desktop/07-pet-pending.webp)
+![Página do pet: pedido pendente](desktop/07-pet-pending.webp)
 
-<img src="mobile/07-pet-pending.webp" alt="Página do pet: pedido em aberto no celular" width="300">
+<img src="mobile/07-pet-pending.webp" alt="Página do pet: pedido pendente no celular" width="300">
 
 <a id="08-pet-approved"></a>
 

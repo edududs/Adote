@@ -17,7 +17,7 @@ você quiser.
 
 Só a última versão publicada recebe correção.
 
-## O que já é garantido
+## Modelo de ameaça
 
 O modelo de ameaça está em [docs/security.md](docs/security.md): o que se protege, contra quem, e
 os riscos assumidos.

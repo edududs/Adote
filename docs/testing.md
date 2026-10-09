@@ -1,6 +1,6 @@
 # Testes
 
-`uv run poe check` roda tudo. Piso de cobertura: 95% (está em ~99%).
+`uv run poe check` roda tudo. Piso de cobertura: 95%.
 
 ## O que cada grupo prova
 

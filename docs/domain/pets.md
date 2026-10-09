@@ -4,8 +4,8 @@
 |---|---|---|
 | Pet | `Pet` | Um animal divulgado para adoção, como o tutor o descreveu. Identificado por UUID. |
 | Tutor | `Pet.owner_id` | A conta que divulgou o pet. Na tela, "quem divulgou". |
-| Descrição do pet | `PetDetails` | Tudo que o tutor preenche: nome, espécie, sexo, raça, características, descrição, cidade, UF e telefone de contato. |
-| Espécie | `Species` | Cachorro ou gato. |
+| Dados do pet | `PetDetails` | Tudo que o tutor preenche: nome, espécie, sexo, raça, características, descrição, cidade, UF e telefone de contato. |
+| Espécie | `Species` | Cão ou gato (na tela, "Cachorro" e "Gato"). |
 | Raça | `Breed` | Pertence a uma espécie; "SRD (vira-lata)" existe nas duas. |
 | Característica | `TagId` | Etiqueta do catálogo (castrado, vacinado, porte...). No máximo 10 por pet. |
 | Foto | `Pet.photo`, `PhotoStore` | Chave no armazenamento de fotos. O nome enviado nunca é usado. |

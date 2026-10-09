@@ -10,14 +10,14 @@ Decisão não se edita: cria-se outra e marca-se a antiga como `substituída por
 
 | ID | Decisão | Status | Registro |
 |---|---|---|---|
-| D-001 | Reescrever a versão de aprendizado em vez de remendar: esquema, rotas e estrutura novos | decidido | [0007](0007-fresh-schema.md) |
+| D-001 | Reescrever a versão anterior em vez de corrigi-la aos poucos: esquema, rotas e estrutura novos | decidido | [0007](0007-fresh-schema.md) |
 | D-002 | Hexagonal com DDD: domínio e aplicação em Python puro com Pydantic, Django só nos adaptadores | decidido | [0001](0001-hexagonal-ddd-django-in-adapters.md) |
 | D-003 | Contextos `accounts`, `pets` e `adoption`, mais `shared`; cada um com seu app Django dentro de `adapters/` | decidido | [0002](0002-bounded-contexts.md) |
 | D-004 | Código, identificadores e arquivos em inglês; documentação, interface, URLs e e-mails em pt-BR | decidido | |
-| D-005 | Python 3.14, Django 6, uv, ruff com todas as regras, pyright estrito, tarefas no poe | decidido | |
+| D-005 | Python 3.14, Django 6.1, uv, ruff com todas as regras, pyright estrito, tarefas no poe | decidido | |
 | D-006 | Renderização no servidor com Bootstrap; sem SPA. O único JSON é o do gráfico do painel | substituída por D-060 | |
-| D-007 | Licença MIT, como os outros projetos do autor | decidido | |
-| D-008 | A branch padrão é `main`; `master` deixa de existir depois do merge da reescrita | decidido | |
+| D-007 | Licença MIT | decidido | |
+| D-008 | A branch padrão é `main` | decidido | |
 
 ## Adoção
 
@@ -58,16 +58,21 @@ Decisão não se edita: cria-se outra e marca-se a antiga como `substituída por
 | ID | Decisão | Status | Registro |
 |---|---|---|---|
 | D-040 | Escrita passa pelo domínio; leitura das páginas vai direto ao ORM em `queries.py` | decidido | [0004](0004-read-side-queries.md) |
-| D-041 | Casos de uso síncronos (WSGI, gunicorn), ao contrário do BrazCar | decidido | [0005](0005-sync-use-cases.md) |
+| D-041 | Casos de uso síncronos (WSGI, gunicorn) | decidido | [0005](0005-sync-use-cases.md) |
 | D-042 | Autorização falha como 404; mudança de estado só por POST com CSRF | decidido | |
 | D-043 | Bibliotecas de front servidas pela aplicação; CSP só `'self'` | decidido | [0006](0006-vendored-assets.md) |
 | D-044 | Configuração por ambiente, segura por padrão: debug é a exceção que se liga | decidido | |
 | D-045 | Falha de e-mail é registrada e nunca desfaz a ação | decidido | |
 | D-046 | Django 6.1: e-mail configurado por `MAILERS` (o `check --deploy` recusa o console em produção); e-mails enviados como tarefa do Tasks framework, com o backend imediato até existir um worker | decidido | |
+| D-047 | Login exigido por padrão com `LoginRequiredMiddleware`; rota pública é exceção marcada e listada num teste | decidido | |
+
+## Interface
+
+| ID | Decisão | Status | Registro |
+|---|---|---|---|
 | D-060 | Renderização no servidor com Tailwind 4 no lugar do Bootstrap e sem jQuery; componentes interativos com HTML nativo (`<dialog>`, `<details>`) e JS puro; CSS compilado e versionado | decidido | [0011](0011-tailwind-and-native-components.md) |
 | D-061 | Identidade visual: creme, ameixa, verde-azulado e vinho, Nunito nos títulos e Inter no texto, animações só com `transform`/`opacity` e sempre sob `prefers-reduced-motion` | decidido | [0011](0011-tailwind-and-native-components.md) |
 | D-062 | Templates com os recursos do Django 5 e 6: partials (`partialdef`), `{% querystring %}` e campos renderizados por `FORM_RENDERER` com `forms/field.html` | decidido | |
-| D-047 | Login exigido por padrão com `LoginRequiredMiddleware`; rota pública é exceção marcada e listada num teste | decidido | |
 
 ## Qualidade e processo
 

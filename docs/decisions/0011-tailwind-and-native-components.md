@@ -5,8 +5,8 @@
 ## Contexto
 
 O visual da primeira versão era o Bootstrap quase sem personalização, com jQuery, Select2 e jQuery
-Mask para máscaras e selects. A aparência era de protótipo, e personalizar o Bootstrap compilado
-significava brigar com cores e espaçamentos fixos no CSS dele.
+Mask para máscaras e selects. A aparência era genérica, sem identidade própria, e personalizar o Bootstrap compilado
+exigia sobrescrever cores e espaçamentos fixos no CSS dele.
 
 ## Decisão
 

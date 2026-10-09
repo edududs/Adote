@@ -12,5 +12,4 @@
 - [ ] Regra nova ou bug corrigido tem teste que falharia sem a mudança
 - [ ] Decisão nova registrada em `docs/decisions/README.md`
 - [ ] Documento afetado atualizado no mesmo PR (`docs/domain/`, `docs/architecture.md`...)
-
 - [ ] Mudança de tela: prints regenerados com `uv run poe screens`

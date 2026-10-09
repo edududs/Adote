@@ -17,6 +17,6 @@ apontar para outra origem.
 
 ## Consequências
 
-- ~740 KB no repositório, marcados como `linguist-vendored`.
+- Cerca de 780 KB no repositório, marcados como `linguist-vendored`.
 - Atualizar uma biblioteca é trocar uma pasta (procedimento no README da pasta).
 - A aplicação funciona sem acesso à internet, exceto o preenchimento por CEP.

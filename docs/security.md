@@ -33,7 +33,7 @@
 
 ## Riscos assumidos
 
-- **Sem limite de tentativas de login nem de pedidos.** Depende do proxy até entrar no roadmap.
+- **Sem limite de tentativas de login nem de pedidos.** O controle fica a cargo do proxy; o limite de pedidos está previsto no roadmap.
 - **E-mail não é confirmado no cadastro.** Alguém pode se cadastrar com o e-mail de outra pessoa.
 - **Fotos são servidas pela própria aplicação** quando `DJANGO_SERVE_MEDIA=1`; o ideal em produção é
   o proxy ou um storage de objetos.

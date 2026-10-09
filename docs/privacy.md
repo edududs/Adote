@@ -2,7 +2,7 @@
 
 | Dado | De quem | Para quê | Quem vê |
 |---|---|---|---|
-| Nome, usuário | Toda conta | Identificação | Quem recebe um pedido da pessoa; a administração |
+| Nome, usuário | Toda conta | Identificação | O tutor de um pet que a pessoa pediu; a administração |
 | E-mail | Toda conta | Avisos de pedido e de decisão | O tutor de um pet que a pessoa pediu; a administração |
 | Telefone da conta | Toda conta | Contato do tutor com o interessado | O tutor de um pet que a pessoa pediu; a administração |
 | CEP, cidade, bairro, estado | Toda conta | Proximidade com o pet | Idem |

@@ -1,22 +1,36 @@
 # Roadmap
 
-## Agora
+## Estado atual
 
-- Lançar a `v0.1.0` e publicar a primeira instância.
+A versão `0.1.0` está em preparação (seção "Não lançado" do [changelog](../CHANGELOG.md)). Ela cobre
+o ciclo completo de adoção: divulgar um pet, pedir para adotar, aprovar ou recusar, cancelar um
+pedido, com avisos por e-mail, painel da comunidade e interface para computador e celular.
+
+Limitações conhecidas desta versão:
+
+- A imagem Docker não tem build automatizado no CI; o processo de build está descrito em
+  [runbooks/deploy.md](runbooks/deploy.md).
+- Bancos da versão anterior à reescrita não são migrados: o esquema é novo
+  ([ADR 0007](decisions/0007-fresh-schema.md)).
+
+## Próximos marcos
+
+- **0.1.0:** primeira versão publicada e primeira instância em produção.
+- **Build da imagem no CI**, publicada no GitHub Container Registry a cada versão.
 
 ## Depois
 
-- **Recuperação de senha** por e-mail (as views do Django cobrem; faltam templates e o teste).
+- **Recuperação de senha** por e-mail.
 - **Confirmação de e-mail** no cadastro, antes de permitir pedir ou divulgar.
 - **Mais de uma foto por pet**, com ordenação e recorte.
-- **Idade e porte** como campos do pet, e filtro por eles (hoje vão na descrição e em características).
+- **Idade e porte** como campos do pet, com filtro (hoje vão na descrição e nas características).
 - **Limite de pedidos** por conta e por janela de tempo, contra abuso.
-- **Exclusão de conta pela própria pessoa** (hoje só pela administração), com o que isso faz com o
-  histórico de adoções ([privacy.md](privacy.md)).
+- **Exclusão de conta pela própria pessoa** (hoje feita pela administração), com o efeito sobre o
+  histórico de adoções descrito em [privacy.md](privacy.md).
 
-## Talvez
+## Em estudo
 
-- Página pública do pet, sem login, para compartilhar o link fora da plataforma (exige rever a privacidade).
+- Página pública do pet, sem login, para compartilhamento fora da plataforma (exige rever a privacidade).
 - Organizações protetoras como conta própria, com vários membros.
-- Acompanhamento pós-adoção (o adotante manda uma foto depois de 30 dias).
-- API JSON para um app móvel.
+- Acompanhamento pós-adoção, com foto do pet 30 dias depois da entrega.
+- API JSON para um aplicativo móvel.

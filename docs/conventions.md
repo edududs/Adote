@@ -54,7 +54,8 @@ As regras que valem em todo o código. São poucas, e todas são conferidas por 
   e entra na lista `PUBLIC` de `tests/test_project.py`.
 - View: decorador de método HTTP (`require_GET`/`require_POST`), traduz erro de domínio em mensagem
   ou 404. Sem regra de negócio em view nem em template.
-- API do Django mais nova que o `django-types` ganha um stub em `typings/`, só com o que usamos, até o pacote alcançar.
+- API do Django ainda ausente no `django-types` ganha um stub em `typings/`, limitado ao que o código
+  usa, até o pacote incluí-la.
 - Formulário herda de `StyledForm` e converte a entrada em value objects nos `clean_*`.
 - Dado de referência (raças, características) entra por migração de dados, nunca por sinal.
 

@@ -11,7 +11,7 @@ pedido, e quem divulgou escolhe para quem o pet vai.
 ## O problema
 
 Protetores independentes divulgam animais resgatados em grupos de mensagem e redes sociais. Os
-interessados chegam todos pelo mesmo canal, cada um com uma conversa, e o protetor perde o fio:
+interessados chegam todos pelo mesmo canal, cada um com uma conversa, e o protetor perde o controle:
 quem perguntou primeiro, quem já foi recusado, se o pet já tem dono. O Adote organiza esse fluxo:
 cada pet tem uma página, cada interessado faz um pedido com uma mensagem, e a decisão fica registrada.
 
@@ -19,8 +19,8 @@ cada pet tem uma página, cada interessado faz um pedido com uma mensagem, e a d
 
 - **Divulgar:** foto, espécie (cão ou gato), raça, sexo, características (castrado, vacinado...),
   descrição, cidade e telefone de contato.
-- **Adotar:** mural com filtros (espécie, raça, sexo, estado, cidade, característica) e paginação;
-  na página do pet, um pedido com mensagem para quem divulgou.
+- **Adotar:** mural com abas por espécie e filtros por raça, sexo, estado, cidade e característica,
+  com paginação; na página do pet, um pedido com mensagem para quem divulgou.
 - **Decidir:** quem divulgou vê os pedidos, abre o perfil de cada interessado e aprova ou recusa.
   Aprovar um pedido recusa os outros automaticamente e marca o pet como adotado.
 - **Acompanhar:** quem pediu vê a situação dos seus pedidos e pode cancelar enquanto não há resposta.
@@ -39,12 +39,24 @@ As regras completas, com o vocabulário de cada parte, estão em [docs/domain/](
 Todas as telas, em cada situação e também no celular, com a explicação de cada uma:
 [docs/screens/](docs/screens/README.md).
 
+## Stack
+
+| Camada | Tecnologia |
+|---|---|
+| Linguagem e framework | Python 3.14, Django 6.1 (renderização no servidor) |
+| Domínio | Pydantic 2 (entidades e value objects congelados) |
+| Banco | PostgreSQL em produção, SQLite em desenvolvimento |
+| Interface | Tailwind CSS 4, JavaScript sem framework, Tom Select, Chart.js, Font Awesome |
+| Produção | gunicorn, WhiteNoise, Docker |
+| Qualidade | ruff, pyright (estrito), pytest, Hypothesis, Playwright |
+| Processo | uv, poethepoet, git-cliff, GitHub Actions |
+
 ## Arquitetura
 
 ```mermaid
 flowchart LR
     P[Pessoa no navegador] -->|HTTPS| X[Proxy TLS]
-    X --> G[gunicorn + Django 6<br/>WhiteNoise para estáticos]
+    X --> G[gunicorn + Django 6.1<br/>WhiteNoise para estáticos]
     G --> DB[(Postgres<br/>ou SQLite local)]
     G --> M[(Fotos<br/>volume /data)]
     G -->|SMTP| E[E-mail]
@@ -63,7 +75,7 @@ com lock na linha do pet. Por isso as regras que cruzam pedidos (uma aprovação
 pendente depois da adoção, um pedido vivo por pessoa) valem sempre, e o banco as repete como
 constraints. A situação "adotado" é calculada a partir dos pedidos, nunca gravada.
 
-**Front sem framework.** Templates do Django 6 (partials, `{% querystring %}`, campos renderizados
+**Front sem framework.** Templates do Django 6.1 (partials, `{% querystring %}`, campos renderizados
 por template) com Tailwind 4; menu e confirmações em `<dialog>` nativo, e o resto em JS puro, que
 melhora a página sem ser necessário. Animações respeitam `prefers-reduced-motion`.
 
@@ -86,15 +98,18 @@ pedidos em todas as situações. E-mails saem no console. Variáveis de ambiente
 
 Com Docker (Postgres incluído): defina `DJANGO_SECRET_KEY` num `.env` e rode `docker compose up --build`.
 
+Para alterar o visual é preciso Node 22: `npm ci` uma vez e `uv run poe css-watch` durante o
+trabalho. O CSS compilado é versionado, então rodar o app não exige Node.
+
 ## Qualidade
 
-`uv run poe check` é o portão que o CI roda, e nada é dado como pronto sem ele:
+Toda mudança passa por `uv run poe check`, o mesmo portão que o CI executa:
 
 | Etapa | O que garante |
 |---|---|
 | `ruff format --check` e `ruff check` | Todas as regras do ruff ligadas; cada exceção justificada em [ruff.toml](ruff.toml) |
 | `pyright` em modo estrito | Tipos em `src/` e `tests/`, sem `Any` solto |
-| `pytest` com cobertura mínima de 95% | Propriedades (Hypothesis), contratos de porta, views e arquitetura |
+| `pytest` com cobertura mínima de 95% | Propriedades (Hypothesis), contratos de porta, views, arquitetura e testes de navegador (Playwright) |
 | `makemigrations --check` | Nenhum model mudou sem migration |
 | `check --deploy` | O checklist de produção do Django passa com as configurações de produção |
 

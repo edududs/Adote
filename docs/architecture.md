@@ -5,7 +5,7 @@
 ```mermaid
 flowchart LR
     P[Tutor e adotante<br/>no navegador] -->|HTTPS| X[Proxy que termina TLS]
-    X --> G[gunicorn<br/>Django 6 + WhiteNoise]
+    X --> G[gunicorn<br/>Django 6.1 + WhiteNoise]
     G --> DB[(Postgres<br/>SQLite em desenvolvimento)]
     G --> M[(Fotos dos pets<br/>volume /data/media)]
     G -->|SMTP| E[Provedor de e-mail]
@@ -13,7 +13,8 @@ flowchart LR
 ```
 
 Uma aplicação Django 6.1 renderizada no servidor, com visual em Tailwind 4 e JS puro para as
-interações (ADR 0011). Não há SPA nem API pública; o único JSON é o do gráfico do painel. Todo script, estilo e fonte é servido pela própria aplicação (sem CDN), então a CSP só
+interações (ADR 0011). Não há SPA nem API pública; só o
+gráfico do painel (`/painel/dados/`) e o healthcheck (`/saude/`) respondem JSON. Todo script, estilo e fonte é servido pela própria aplicação (sem CDN), então a CSP só
 aceita `'self'`; a única origem externa é a consulta de CEP feita pelo navegador.
 
 ## Contextos
