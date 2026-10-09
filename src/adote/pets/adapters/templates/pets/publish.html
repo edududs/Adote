@@ -1,0 +1,30 @@
+{% extends "app.html" %}
+{% block title %}Divulgar pet{% endblock %}
+{% block content %}
+<div class="box">
+  <h2 class="font-vinho">Quero divulgar</h2>
+  <p class="text-muted">Conte quem é o pet. Quem quiser adotar envia um pedido, e você decide.</p>
+  <hr>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" %}
+    {% with field=form.photo %}{% include "partials/_field.html" %}{% endwith %}
+    <div class="row">
+      <div class="col-md-6">{% with field=form.name %}{% include "partials/_field.html" %}{% endwith %}</div>
+      <div class="col-md-3">{% with field=form.species %}{% include "partials/_field.html" %}{% endwith %}</div>
+      <div class="col-md-3">{% with field=form.sex %}{% include "partials/_field.html" %}{% endwith %}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">{% with field=form.breed %}{% include "partials/_field.html" %}{% endwith %}</div>
+      <div class="col-md-6">{% with field=form.tags %}{% include "partials/_field.html" %}{% endwith %}</div>
+    </div>
+    {% with field=form.description %}{% include "partials/_field.html" %}{% endwith %}
+    <div class="row">
+      <div class="col-md-4">{% with field=form.state %}{% include "partials/_field.html" %}{% endwith %}</div>
+      <div class="col-md-8">{% with field=form.city %}{% include "partials/_field.html" %}{% endwith %}</div>
+    </div>
+    {% with field=form.contact_phone %}{% include "partials/_field.html" %}{% endwith %}
+    <button type="submit" class="btn btn-custom-primary btn-lg">Divulgar</button>
+  </form>
+</div>
+{% endblock %}

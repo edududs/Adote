@@ -1,0 +1,28 @@
+line-length = 110
+target-version = "py314"
+extend-exclude = ["src/adote/*/adapters/migrations"]
+
+[lint]
+select = ["ALL"]
+ignore = [
+    "D",       # docstrings only where they add information; names and types carry the intent
+    "CPY",     # no copyright header: the license lives in LICENSE, authorship in git
+    "COM812",  # trailing comma: the formatter owns it
+    "ISC001",  # implicit string concatenation: the formatter owns it
+    "TC001",   # pydantic and Django resolve annotations at runtime, imports cannot move to TYPE_CHECKING
+    "TC002",   # same, for third-party imports
+    "TC003",   # same, for stdlib imports
+    "RUF001",  # pt-BR copy legitimately carries characters ruff finds ambiguous
+    "RUF003",  # same, inside comments
+]
+
+[lint.per-file-ignores]
+# pytest idiom: bare asserts, literal expected values, literal test passwords, fixtures by name
+"tests/**" = ["S101", "PLR2004", "S105", "S106", "ARG001", "PLR0913", "INP001"]
+# Django hands `request` to every view and `sender`/`kwargs` to every signal, used or not
+"src/adote/*/adapters/**" = ["ARG001", "ARG002"]
+# Django's idioms: class-level Meta lists, admin tuples and form field declarations are not shared state
+"src/adote/*/adapters/{models,admin,forms}.py" = ["RUF012"]
+"src/adote/config/settings.py" = ["RUF012"]
+# standalone tools copied into the container and run by path, never imported
+"scripts/**" = ["INP001"]

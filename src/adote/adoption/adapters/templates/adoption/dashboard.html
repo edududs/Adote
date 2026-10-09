@@ -1,0 +1,22 @@
+{% extends "app.html" %}
+{% load static %}
+{% block title %}Painel{% endblock %}
+{% block scripts %}
+<script src="{% static 'vendor/chartjs-4.4.4/chart.umd.js' %}" defer></script>
+<script src="{% static 'adote/js/dashboard.js' %}" defer></script>
+{% endblock %}
+{% block content %}
+<h2 class="font-vinho">Painel</h2>
+<div class="row row-cols-2 row-cols-md-4 g-3 my-2">
+  <div class="col"><div class="box text-center"><p class="display-6 mb-0">{{ totals.published }}</p><p class="mb-0">pets divulgados</p></div></div>
+  <div class="col"><div class="box text-center"><p class="display-6 mb-0">{{ totals.available }}</p><p class="mb-0">esperando um lar</p></div></div>
+  <div class="col"><div class="box text-center"><p class="display-6 mb-0">{{ totals.adopted }}</p><p class="mb-0">adotados</p></div></div>
+  <div class="col"><div class="box text-center"><p class="display-6 mb-0">{{ totals.pending_requests }}</p><p class="mb-0">pedidos em aberto</p></div></div>
+</div>
+<div class="box mt-4">
+  <h3 class="h5">Adoções por raça</h3>
+  <div class="chart-box">
+    <canvas id="adoptions-by-breed" data-source="{% url 'adoption:dashboard_data' %}" role="img" aria-label="Gráfico de adoções por raça"></canvas>
+  </div>
+</div>
+{% endblock %}

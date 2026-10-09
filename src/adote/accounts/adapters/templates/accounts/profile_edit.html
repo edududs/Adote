@@ -1,0 +1,17 @@
+{% extends "app.html" %}
+{% load static %}
+{% block title %}Editar perfil{% endblock %}
+{% block scripts %}<script src="{% static 'adote/js/cep.js' %}" defer></script>{% endblock %}
+{% block content %}
+<div class="box">
+  <h2 class="font-vinho">Editar perfil</h2>
+  <hr>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "partials/_form_errors.html" %}
+    {% for field in form %}{% include "partials/_field.html" %}{% endfor %}
+    <button type="submit" class="btn btn-custom-primary">Salvar</button>
+    <a class="btn btn-link" href="{% url 'accounts:profile' %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

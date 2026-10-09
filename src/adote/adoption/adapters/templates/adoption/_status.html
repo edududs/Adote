@@ -1,0 +1,4 @@
+{% if status == "pending" %}<span class="badge text-bg-warning">Aguardando resposta</span>
+{% elif status == "approved" %}<span class="badge text-bg-success">Aprovado</span>
+{% elif status == "rejected" %}<span class="badge text-bg-secondary">Recusado</span>
+{% elif status == "withdrawn" %}<span class="badge text-bg-light border">Cancelado</span>{% endif %}

@@ -1,0 +1,23 @@
+{% load static %}<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Adote: encontre um pet para adotar ou divulgue um animal que precisa de lar.">
+  <title>{% block title %}Adote{% endblock %} · Adote</title>
+  <link rel="icon" href="{% static 'adote/img/logo-small.png' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-5.3.3/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/select2-4.1.0-rc.0/select2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'fontawesomefree/css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adote/css/base.css' %}">
+  <script src="{% static 'vendor/jquery-3.7.1/jquery.min.js' %}" defer></script>
+  <script src="{% static 'vendor/bootstrap-5.3.3/bootstrap.bundle.min.js' %}" defer></script>
+  <script src="{% static 'vendor/select2-4.1.0-rc.0/select2.min.js' %}" defer></script>
+  <script src="{% static 'vendor/jquery-mask-1.14.16/jquery.mask.min.js' %}" defer></script>
+  <script src="{% static 'adote/js/base.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% block body %}{% endblock %}
+</body>
+</html>

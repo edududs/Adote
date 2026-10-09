@@ -1,0 +1,51 @@
+{% extends "app.html" %}
+{% block title %}Pets para adoção{% endblock %}
+{% block content %}
+<h2 class="font-vinho">Pets para adoção</h2>
+<form method="get" class="box mb-4" role="search" aria-label="Filtrar pets">
+  <div class="row g-2 align-items-end">
+    <div class="col-6 col-md-2">{% with field=form.species %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-6 col-md-3">{% with field=form.breed %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-6 col-md-2">{% with field=form.sex %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-6 col-md-2">{% with field=form.state %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-6 col-md-3">{% with field=form.city %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-6 col-md-3">{% with field=form.tag %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-12 col-md-3 mb-3 d-flex gap-2">
+      <button type="submit" class="btn btn-custom-secondary">Filtrar</button>
+      <a class="btn btn-link" href="{% url 'adoption:board' %}">Limpar</a>
+    </div>
+  </div>
+</form>
+
+{% if page.object_list %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+  {% for pet in page.object_list %}
+  <div class="col">
+    <article class="card h-100 shadow-sm">
+      <a href="{% url 'adoption:pet' pet.id %}"><img class="card-img-top pet-photo" src="{{ pet.photo.url }}" alt="Foto de {{ pet.name }}" loading="lazy"></a>
+      <div class="card-body">
+        <h3 class="h5 card-title mb-1"><a class="stretched-link text-decoration-none" href="{% url 'adoption:pet' pet.id %}">{{ pet.name }}</a></h3>
+        <p class="card-text text-muted mb-1">{{ pet.get_species_display }} · {{ pet.get_sex_display }} · {{ pet.breed }}</p>
+        <p class="card-text small mb-0"><i class="fa-solid fa-location-dot"></i> {{ pet.city }} - {{ pet.state }}</p>
+        {% if pet.requested_by_me %}<span class="badge text-bg-info mt-2">Você já pediu</span>{% endif %}
+      </div>
+    </article>
+  </div>
+  {% endfor %}
+</div>
+{% if page.has_other_pages %}
+<nav class="mt-4" aria-label="Páginas">
+  <ul class="pagination justify-content-center">
+    {% if page.has_previous %}<li class="page-item"><a class="page-link" href="?{{ query }}{% if query %}&amp;{% endif %}pagina={{ page.previous_page_number }}">Anterior</a></li>{% endif %}
+    <li class="page-item disabled"><span class="page-link">{{ page.number }} de {{ page.paginator.num_pages }}</span></li>
+    {% if page.has_next %}<li class="page-item"><a class="page-link" href="?{{ query }}{% if query %}&amp;{% endif %}pagina={{ page.next_page_number }}">Próxima</a></li>{% endif %}
+  </ul>
+</nav>
+{% endif %}
+{% else %}
+<div class="text-center py-5">
+  <p class="lead">Nenhum pet encontrado com esses filtros.</p>
+  <a class="btn btn-custom-primary" href="{% url 'pets:publish' %}">Divulgar um pet</a>
+</div>
+{% endif %}
+{% endblock %}

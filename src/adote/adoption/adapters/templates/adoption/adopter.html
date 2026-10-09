@@ -1,0 +1,16 @@
+{% extends "app.html" %}
+{% block title %}Perfil de quem quer adotar{% endblock %}
+{% block content %}
+<div class="box">
+  <a href="{% url 'adoption:received' %}" class="btn btn-outline-secondary btn-sm mb-3"><i class="fa-solid fa-arrow-left"></i> Voltar</a>
+  <h2 class="font-vinho">Quem quer adotar {{ adoption_request.pet.name }}</h2>
+  <p>{% include "adoption/_status.html" with status=adoption_request.status %}</p>
+  <hr>
+  {% include "accounts/_profile_card.html" with person=adoption_request.adopter %}
+  {% if adoption_request.message %}
+  <hr>
+  <h3 class="h6 fw-bold">Mensagem</h3>
+  <p>{{ adoption_request.message|linebreaksbr }}</p>
+  {% endif %}
+</div>
+{% endblock %}

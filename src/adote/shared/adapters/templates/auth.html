@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-5 bg-side min-vh-100">
+      <header class="brand-header">
+        <img src="{% static 'adote/img/logo.png' %}" alt="" width="48" height="48">
+        <span class="font-logo">ADO.TE</span>
+      </header>
+      <div class="body-form">
+        {% include "partials/_messages.html" %}
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    <div class="col-lg-7 d-none d-lg-block">
+      <div class="side-logo">
+        <img src="{% static 'adote/img/logo.png' %}" alt="Logotipo do Adote" width="160">
+        <h1>ADO.TE</h1>
+        <p>Nos ajude a salvar vidas.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

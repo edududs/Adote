@@ -1,0 +1,15 @@
+{% extends "auth.html" %}
+{% block title %}Entrar{% endblock %}
+{% block content %}
+<h2>Entrar</h2>
+<p>Que bom ter você de volta!</p>
+<hr>
+<form method="post" action="{% url 'accounts:login' %}" novalidate>
+  {% csrf_token %}
+  {% include "partials/_form_errors.html" %}
+  {% for field in form %}{% include "partials/_field.html" %}{% endfor %}
+  <input type="hidden" name="next" value="{{ next }}">
+  <button type="submit" class="btn btn-custom-primary btn-lg">Entrar</button>
+  <a href="{% url 'accounts:signup' %}" class="link-light float-end mt-3">Ainda não tenho conta</a>
+</form>
+{% endblock %}

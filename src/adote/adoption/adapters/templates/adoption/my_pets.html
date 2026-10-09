@@ -1,0 +1,39 @@
+{% extends "app.html" %}
+{% block title %}Meus pets{% endblock %}
+{% block content %}
+<div class="box">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h2 class="font-vinho mb-0">Meus pets</h2>
+    <a class="btn btn-custom-primary" href="{% url 'pets:publish' %}">Divulgar outro</a>
+  </div>
+  <hr>
+  {% if pets %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th scope="col">Foto</th><th scope="col">Nome</th><th scope="col">Raça</th><th scope="col">Situação</th><th scope="col">Pedidos</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+      <tbody>
+      {% for pet in pets %}
+        <tr>
+          <td><img class="pet-thumb" src="{{ pet.photo.url }}" alt=""></td>
+          <td><a href="{% url 'adoption:pet' pet.id %}">{{ pet.name }}</a></td>
+          <td>{{ pet.breed }}</td>
+          <td>{% if pet.adopted %}<span class="badge text-bg-success">Adotado</span>{% else %}<span class="badge text-bg-primary">Para adoção</span>{% endif %}</td>
+          <td>{% if pet.pending_count %}<a href="{% url 'adoption:received' %}">{{ pet.pending_count }} aguardando</a>{% else %}—{% endif %}</td>
+          <td>
+            {% if not pet.adopted %}
+            <form method="post" action="{% url 'pets:remove' pet.id %}" data-confirm="Remover {{ pet.name }}? Os pedidos pendentes serão descartados.">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger">Remover</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>Você ainda não divulgou nenhum pet.</p>
+  {% endif %}
+</div>
+{% endblock %}

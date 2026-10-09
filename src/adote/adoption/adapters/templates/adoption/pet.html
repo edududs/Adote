@@ -1,0 +1,53 @@
+{% extends "app.html" %}
+{% block title %}{{ pet.name }}{% endblock %}
+{% block content %}
+<div class="box">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <img class="pet-photo" src="{{ pet.photo.url }}" alt="Foto de {{ pet.name }}">
+    </div>
+    <div class="col-md-8">
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <h2 class="font-vinho mb-0">{{ pet.name }}</h2>
+        {% if pet.adopted %}<span class="badge text-bg-success">Adotado</span>{% else %}<span class="badge text-bg-primary">Para adoção</span>{% endif %}
+      </div>
+      <p class="text-muted">{{ pet.get_species_display }} · {{ pet.get_sex_display }} · {{ pet.breed }}</p>
+      <p>{% for tag in pet.tags.all %}<span class="badge text-bg-info me-1">{{ tag }}</span>{% endfor %}</p>
+      <h3 class="h6 fw-bold">Descrição</h3>
+      <p>{{ pet.description|linebreaksbr }}</p>
+      <h3 class="h6 fw-bold">Onde está</h3>
+      <p>{{ pet.city }} - {{ pet.get_state_display }}</p>
+
+      {% if contact %}
+      <h3 class="h6 fw-bold">Contato de quem divulgou</h3>
+      <p>
+        {{ contact.formatted }}
+        {% if contact.whatsapp_url %}<a class="btn btn-success btn-sm ms-2" href="{{ contact.whatsapp_url }}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>{% endif %}
+      </p>
+      {% endif %}
+
+      <hr>
+      {% if is_owner %}
+        <p>Você divulgou este pet. {% if pending_count %}Há {{ pending_count }} pedido{{ pending_count|pluralize }} aguardando resposta.{% endif %}</p>
+        {% if can_decide %}<a class="btn btn-custom-primary" href="{% url 'adoption:received' %}">Ver pedidos</a>{% endif %}
+      {% elif can_request %}
+        <form method="post" action="{% url 'adoption:request' pet.id %}">
+          {% csrf_token %}
+          {% with field=form.message %}{% include "partials/_field.html" %}{% endwith %}
+          <button type="submit" class="btn btn-success btn-lg">Quero adotar</button>
+        </form>
+      {% elif my_request %}
+        <p>Seu pedido: {% include "adoption/_status.html" with status=my_request.status %}</p>
+        {% if can_withdraw %}
+        <form method="post" action="{% url 'adoption:withdraw' my_request.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger">Cancelar pedido</button>
+        </form>
+        {% endif %}
+      {% elif pet.adopted %}
+        <p>Este pet já encontrou um lar.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

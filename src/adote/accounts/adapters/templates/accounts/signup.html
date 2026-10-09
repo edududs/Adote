@@ -1,0 +1,37 @@
+{% extends "auth.html" %}
+{% load static %}
+{% block title %}Cadastro{% endblock %}
+{% block scripts %}<script src="{% static 'adote/js/cep.js' %}" defer></script>{% endblock %}
+{% block content %}
+<h2>Cadastre-se</h2>
+<p>Seu cadastro salva vidas.</p>
+<hr>
+<form method="post" action="{% url 'accounts:signup' %}" novalidate>
+  {% csrf_token %}
+  {% include "partials/_form_errors.html" %}
+  <div class="row">
+    <div class="col-md">{% with field=form.first_name %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-md">{% with field=form.last_name %}{% include "partials/_field.html" %}{% endwith %}</div>
+  </div>
+  {% with field=form.username %}{% include "partials/_field.html" %}{% endwith %}
+  <div class="row">
+    <div class="col-md">{% with field=form.email %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-md">{% with field=form.phone %}{% include "partials/_field.html" %}{% endwith %}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">{% with field=form.postal_code %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-md-8">{% with field=form.state %}{% include "partials/_field.html" %}{% endwith %}</div>
+  </div>
+  <div class="row">
+    <div class="col-md">{% with field=form.city %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-md">{% with field=form.neighborhood %}{% include "partials/_field.html" %}{% endwith %}</div>
+  </div>
+  {% with field=form.about %}{% include "partials/_field.html" %}{% endwith %}
+  <div class="row">
+    <div class="col-md">{% with field=form.password1 %}{% include "partials/_field.html" %}{% endwith %}</div>
+    <div class="col-md">{% with field=form.password2 %}{% include "partials/_field.html" %}{% endwith %}</div>
+  </div>
+  <button type="submit" class="btn btn-custom-primary btn-lg">Criar conta</button>
+  <a href="{% url 'accounts:login' %}" class="link-light float-end mt-3">Já tenho uma conta</a>
+</form>
+{% endblock %}

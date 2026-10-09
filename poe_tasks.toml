@@ -1,0 +1,57 @@
+[tasks.format]
+help = "Format the code"
+cmd = "ruff format"
+
+[tasks.lint]
+help = "Format check and lint, nothing else: what the pre-commit hook runs"
+sequence = [{ cmd = "ruff format --check" }, { cmd = "ruff check" }]
+
+[tasks.types]
+help = "Type check"
+cmd = "pyright"
+
+[tasks.test]
+help = "Every test, measuring coverage; fails below the floor"
+cmd = "pytest --cov=src/adote --cov-report=term-missing:skip-covered --cov-fail-under=95"
+
+[tasks.migrations-check]
+help = "Fail if a model changed without a migration"
+cmd = "python manage.py makemigrations --check --dry-run"
+env = { DJANGO_DEBUG.default = "1" }
+
+[tasks.deploy-check]
+help = "Django's own production checklist, with the settings production would have"
+cmd = "python manage.py check --deploy --fail-level WARNING"
+env = { DJANGO_SECRET_KEY.default = "a-long-random-value-only-for-the-deploy-check-0123456789abcdefghij", DJANGO_ALLOWED_HOSTS.default = "adote.example.com" }
+
+[tasks.fix]
+help = "Pipeline to run before calling work done: rewrites files, then checks types"
+sequence = ["format", { cmd = "ruff check --fix" }, "types"]
+
+[tasks.check]
+help = "The gate CI runs, changes nothing: format, lint, types, tests with coverage, migration drift, deploy checklist"
+sequence = [
+    { ref = "lint" },
+    { ref = "types" },
+    { ref = "test" },
+    { ref = "migrations-check" },
+    { ref = "deploy-check" },
+]
+
+[tasks.serve]
+help = "Run the app locally with the development server"
+cmd = "python manage.py runserver"
+env = { DJANGO_DEBUG.default = "1" }
+
+[tasks.setup]
+help = "Create the local database and load the demonstration seed"
+sequence = [{ cmd = "python manage.py migrate" }, { cmd = "python manage.py seed_demo" }]
+env = { DJANGO_DEBUG.default = "1" }
+
+[tasks.hooks]
+help = "Point git at the versioned hooks"
+cmd = "git config core.hooksPath .githooks"
+
+[tasks.release]
+help = "Cut a release locally: version, changelog, commit and tag. Never pushes. Pass --dry-run to preview"
+cmd = "scripts/release.sh"

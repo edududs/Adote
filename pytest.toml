@@ -1,0 +1,10 @@
+[pytest]
+minversion = "9.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = ["--strict-markers", "--strict-config", "--reuse-db"]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+filterwarnings = ["error"]
+markers = [
+    "contract: a port contract, run against the in-memory fake and the Django adapter alike",
+]

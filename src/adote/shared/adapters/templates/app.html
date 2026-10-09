@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container-fluid">
+  <div class="row">
+    {% include "partials/_nav.html" %}
+    <main class="col-md-9 col-lg-10 ms-sm-auto px-md-4 py-4">
+      {% include "partials/_messages.html" %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

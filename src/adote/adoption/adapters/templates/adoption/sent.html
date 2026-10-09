@@ -1,0 +1,35 @@
+{% extends "app.html" %}
+{% block title %}Meus pedidos{% endblock %}
+{% block content %}
+<div class="box">
+  <h2 class="font-vinho">Meus pedidos de adoção</h2>
+  <hr>
+  {% if requests %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th scope="col">Pet</th><th scope="col">Pedido em</th><th scope="col">Situação</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
+      <tbody>
+      {% for item in requests %}
+        <tr>
+          <td><a href="{% url 'adoption:pet' item.pet.id %}">{{ item.pet.name }}</a> <span class="text-muted">({{ item.pet.breed }})</span></td>
+          <td>{{ item.requested_at|date:"d/m/Y H:i" }}</td>
+          <td>{% include "adoption/_status.html" with status=item.status %}</td>
+          <td>
+            {% if item.status == "pending" %}
+            <form method="post" action="{% url 'adoption:withdraw' item.id %}">
+              {% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-danger">Cancelar</button>
+            </form>
+            {% elif item.status == "approved" %}
+            <a class="btn btn-sm btn-success" href="{% url 'adoption:pet' item.pet.id %}">Ver contato</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>Você ainda não pediu para adotar nenhum pet. <a href="{% url 'adoption:board' %}">Ver pets</a></p>
+  {% endif %}
+</div>
+{% endblock %}

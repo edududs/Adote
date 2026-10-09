@@ -1,0 +1,30 @@
+{% load static %}
+<nav class="col-md-3 col-lg-2 d-md-block bg-side sidebar py-4" aria-label="Menu principal">
+  <a class="d-flex align-items-center gap-2 text-white text-decoration-none mb-3" href="{% url 'adoption:board' %}">
+    <img src="{% static 'adote/img/logo.png' %}" alt="" width="36" height="36"><span class="fs-3">ADO.TE</span>
+  </a>
+  <hr>
+  <ul class="nav flex-column gap-1">
+    {% url 'adoption:board' as board_url %}
+    {% url 'pets:publish' as publish_url %}
+    {% url 'adoption:my_pets' as my_pets_url %}
+    {% url 'adoption:received' as received_url %}
+    {% url 'adoption:sent' as sent_url %}
+    {% url 'adoption:dashboard' as dashboard_url %}
+    {% url 'accounts:profile' as profile_url %}
+    <li class="nav-item"><a class="nav-link text-white{% if request.path == board_url %} active fw-bold{% endif %}" href="{{ board_url }}"><i class="fa-solid fa-paw me-2"></i>Adotar</a></li>
+    <li class="nav-item"><a class="nav-link text-white{% if request.path == publish_url %} active fw-bold{% endif %}" href="{{ publish_url }}"><i class="fa-solid fa-plus me-2"></i>Divulgar pet</a></li>
+    <li class="nav-item"><a class="nav-link text-white{% if request.path == my_pets_url %} active fw-bold{% endif %}" href="{{ my_pets_url }}"><i class="fa-solid fa-house me-2"></i>Meus pets</a></li>
+    <li class="nav-item"><a class="nav-link text-white{% if request.path == received_url %} active fw-bold{% endif %}" href="{{ received_url }}"><i class="fa-solid fa-inbox me-2"></i>Pedidos recebidos</a></li>
+    <li class="nav-item"><a class="nav-link text-white{% if request.path == sent_url %} active fw-bold{% endif %}" href="{{ sent_url }}"><i class="fa-solid fa-paper-plane me-2"></i>Meus pedidos</a></li>
+    <li class="nav-item"><a class="nav-link text-white{% if request.path == dashboard_url %} active fw-bold{% endif %}" href="{{ dashboard_url }}"><i class="fa-solid fa-chart-column me-2"></i>Painel</a></li>
+    <li class="nav-item"><a class="nav-link text-white{% if request.path == profile_url %} active fw-bold{% endif %}" href="{{ profile_url }}"><i class="fa-solid fa-user me-2"></i>Perfil</a></li>
+  </ul>
+  <hr>
+  <p class="small mb-2">{{ request.user.get_full_name|default:request.user.username }}</p>
+  <form method="post" action="{% url 'accounts:logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-custom-primary btn-sm w-100">Sair</button>
+  </form>
+  <p class="small text-white-50 mt-3 mb-0">v{{ adote_version }}</p>
+</nav>

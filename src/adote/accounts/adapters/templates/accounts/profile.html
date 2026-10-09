@@ -1,0 +1,15 @@
+{% extends "app.html" %}
+{% block title %}Perfil{% endblock %}
+{% block content %}
+<div class="box">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <h2 class="font-vinho mb-0">Seu perfil</h2>
+    <div class="d-flex gap-2">
+      <a class="btn btn-custom-primary" href="{% url 'accounts:edit_profile' %}">Editar perfil</a>
+      <a class="btn btn-outline-secondary" href="{% url 'accounts:password' %}">Trocar senha</a>
+    </div>
+  </div>
+  <hr>
+  {% include "accounts/_profile_card.html" with person=account %}
+</div>
+{% endblock %}

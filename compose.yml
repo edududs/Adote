@@ -1,0 +1,39 @@
+# Local production-like run: `docker compose up --build`, then open http://localhost:8000.
+# TLS is off here (DJANGO_SECURE_SSL_REDIRECT=0); in production a proxy terminates it.
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?set DJANGO_SECRET_KEY in .env}
+      DJANGO_SECURE_SSL_REDIRECT: ${DJANGO_SECURE_SSL_REDIRECT:-0}
+      DJANGO_SERVE_MEDIA: ${DJANGO_SERVE_MEDIA:-1}
+      DATABASE_URL: ${DATABASE_URL:-postgres://adote:adote@db:5432/adote}
+    volumes:
+      - media:/data
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: adote
+      POSTGRES_USER: adote
+      POSTGRES_PASSWORD: adote
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U adote -d adote"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  media:
+  pgdata:

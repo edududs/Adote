@@ -1,0 +1,8 @@
+{
+  "include": ["src", "tests", "scripts", "manage.py"],
+  "exclude": ["**/migrations/**", "**/__pycache__"],
+  "typeCheckingMode": "strict",
+  "pythonVersion": "3.14",
+  "venvPath": ".",
+  "venv": ".venv"
+}
