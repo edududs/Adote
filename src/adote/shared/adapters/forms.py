@@ -18,7 +18,17 @@ class BootstrapForm(forms.BaseForm):
     def full_clean(self) -> None:
         super().full_clean()
         for name in self.errors:
-            if name in self.fields:
-                widget = self.fields[name].widget
+            self._mark_invalid(name)
+
+    def add_error(self, field: str | None, error: object) -> None:
+        """Errors a view adds after validation (a rule of the domain) are marked like the form's own."""
+        super().add_error(field, error)  # pyright: ignore[reportArgumentType] - Django accepts str, list or dict
+        if field is not None:
+            self._mark_invalid(field)
+
+    def _mark_invalid(self, name: str) -> None:
+        if name in self.fields:
+            widget = self.fields[name].widget
+            if "is-invalid" not in widget.attrs.get("class", ""):
                 widget.attrs["class"] = f"{widget.attrs.get('class', '')} is-invalid".strip()
-                widget.attrs["aria-invalid"] = "true"
+            widget.attrs["aria-invalid"] = "true"
