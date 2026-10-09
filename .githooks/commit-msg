@@ -1,0 +1,25 @@
+#!/bin/sh
+# commit-msg gate: a Conventional Commits subject and no trailers.
+# Enable once per clone with `uv run poe hooks`.
+
+msg_file=$1
+subject=$(sed -n '1p' "$msg_file")
+
+case "$subject" in
+  Merge*|Revert*)
+    ;;
+  *)
+    type_re='^(feat|fix|perf|refactor|docs|test|build|ci|chore|style|revert)(\([^)]+\))?!?: .+'
+    if ! echo "$subject" | grep -qE "$type_re"; then
+      echo 'commit-msg: subject must follow Conventional Commits, e.g. "feat(adoption): description"' >&2
+      exit 1
+    fi
+    ;;
+esac
+
+if sed '1d' "$msg_file" | grep -v '^#' | grep -qiE '^co-authored-by:|^signed-off-by:'; then
+  echo 'commit-msg: this repository does not use trailers' >&2
+  exit 1
+fi
+
+exit 0

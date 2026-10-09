@@ -1,0 +1,30 @@
+name: release
+
+# Turns a pushed version tag into a GitHub Release. The notes come from the annotated tag itself,
+# written locally by scripts/release.sh with git-cliff, so nothing is generated here.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  github-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      # The version in pyproject.toml and the tag can never drift apart.
+      - name: Verify the project version matches the tag
+        run: |
+          file_version="$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
+          if [ "$file_version" != "${GITHUB_REF_NAME#v}" ]; then
+            echo "::error::pyproject.toml says $file_version, the tag is $GITHUB_REF_NAME"
+            exit 1
+          fi
+      # checkout fetches the tag as a plain ref; this brings the annotation back.
+      - name: Fetch the annotated tag
+        run: git fetch --force origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
+      - name: Create the release from the tag notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --verify-tag --notes-from-tag --title "$GITHUB_REF_NAME"
