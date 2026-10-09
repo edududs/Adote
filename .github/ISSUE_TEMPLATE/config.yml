@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Falha de segurança
+    url: https://github.com/edududs/Adote/security/advisories/new
+    about: Reporte em privado, nunca em issue pública.

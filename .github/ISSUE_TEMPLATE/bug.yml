@@ -1,0 +1,30 @@
+name: Erro
+description: Algo não funciona como deveria
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: O que aconteceu
+      description: O que você fez, o que esperava e o que viu.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      placeholder: |
+        1. Entre como ...
+        2. Abra ...
+        3. Clique em ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versão
+      description: Está no rodapé do menu, ou em /saude/.
+  - type: textarea
+    id: extra
+    attributes:
+      label: Prints ou logs
