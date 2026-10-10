@@ -1,0 +1,91 @@
+{% extends "app.html" %}
+{% block title %}{{ pet.name }}{% endblock %}
+{% block content %}
+<a href="{% url 'adoption:board' %}" class="btn btn-ghost btn-sm mb-4 -ml-3"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Voltar ao mural</a>
+<div class="grid gap-8 pb-24 md:grid-cols-12 md:pb-0">
+  <div class="md:col-span-5">
+    <div class="overflow-hidden rounded-3xl bg-plum-50 shadow-raised md:sticky md:top-6">
+      <img src="{{ pet.photo.url }}" alt="Foto de {{ pet.name }}" class="pet-photo aspect-[4/3] w-full object-cover motion-safe:animate-fade-in md:aspect-[4/5]">
+    </div>
+  </div>
+
+  <div class="space-y-6 md:col-span-7">
+    <header class="motion-safe:animate-rise">
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="text-3xl font-extrabold sm:text-4xl">{{ pet.name }}</h1>
+        {% include "partials/ui.html#availability" with adopted=pet.adopted %}
+      </div>
+      <p class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-ink-muted">
+        <span><i class="fa-solid {% if pet.species == 'cat' %}fa-cat{% else %}fa-dog{% endif %} mr-1 text-plum-500" aria-hidden="true"></i>{{ pet.get_species_display }}</span>
+        <span><i class="fa-solid {% if pet.sex == 'female' %}fa-venus{% else %}fa-mars{% endif %} mr-1 text-plum-500" aria-hidden="true"></i>{{ pet.get_sex_display }}</span>
+        <span><i class="fa-solid fa-dna mr-1 text-plum-500" aria-hidden="true"></i>{{ pet.breed }}</span>
+        <span><i class="fa-solid fa-location-dot mr-1 text-wine-600" aria-hidden="true"></i>{{ pet.city }} - {{ pet.get_state_display }}</span>
+      </p>
+      {% if pet.tags.all %}<ul class="mt-4 flex flex-wrap gap-2" role="list">{% for tag in pet.tags.all %}<li class="chip"><i class="fa-solid fa-check" aria-hidden="true"></i>{{ tag }}</li>{% endfor %}</ul>{% endif %}
+    </header>
+
+    <section class="card card-pad motion-safe:animate-rise [animation-delay:60ms]" aria-labelledby="sobre">
+      <h2 id="sobre" class="text-lg font-extrabold">Sobre {{ pet.name }}</h2>
+      <p class="mt-2">{{ pet.description|linebreaksbr }}</p>
+    </section>
+
+    <section id="pedido" class="motion-safe:animate-rise [animation-delay:120ms]" aria-label="Adoção">
+      {% if is_owner %}
+      <div class="rounded-2xl bg-teal-100 p-6">
+        <h2 class="flex items-center gap-2 text-lg font-extrabold"><i class="fa-solid fa-house-chimney text-teal-700" aria-hidden="true"></i>Você divulgou {{ pet.name }}</h2>
+        <p class="mt-1 text-ink-muted">{% if pending_count %}{{ pending_count }} pedido{{ pending_count|pluralize }} aguardando a sua resposta.{% else %}Nenhum pedido aguardando resposta agora.{% endif %}</p>
+        {% if contact %}<p class="mt-3 text-sm">Contato que aparece para o adotante aprovado: <strong>{{ contact.formatted }}</strong></p>{% endif %}
+        {% if can_decide %}<a class="btn btn-primary mt-4" href="{% url 'adoption:received' %}"><i class="fa-solid fa-inbox" aria-hidden="true"></i>Responder pedidos</a>{% endif %}
+      </div>
+      {% elif can_request %}
+      <form method="post" action="{% url 'adoption:request' pet.id %}" class="rounded-2xl border-2 border-wine-100 bg-white p-6 shadow-soft" data-loading>
+        {% csrf_token %}
+        <h2 class="text-lg font-extrabold">Quer dar um lar para {{ pet.name }}?</h2>
+        <p class="mb-4 text-sm text-ink-muted">Quem divulgou lê o seu perfil e esta mensagem antes de decidir.</p>
+        {{ form.message.as_field_group }}
+        <button type="submit" class="btn btn-adopt w-full sm:w-auto" data-pop>
+          <span class="btn-label-idle"><i class="fa-solid fa-heart" data-pop-icon aria-hidden="true"></i>Quero adotar</span>
+          <span class="btn-label-busy"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Enviando…</span>
+        </button>
+      </form>
+      {% elif my_request and my_request.status == "approved" %}
+      <div class="relative overflow-hidden rounded-2xl bg-success-bg p-6">
+        <div class="burst" aria-hidden="true">{% for paw in "123456" %}<span><i class="fa-solid fa-paw"></i></span>{% endfor %}</div>
+        <h2 class="flex items-center gap-2 text-xl font-extrabold text-success"><i class="fa-solid fa-heart" aria-hidden="true"></i>É oficial: {{ pet.name }} vai para casa!</h2>
+        <p class="mt-1 text-ink">Combine a entrega com quem divulgou.</p>
+        {% if contact %}
+        <p class="mt-4 font-display text-2xl font-extrabold text-plum-900">{{ contact.formatted }}</p>
+        {% if contact.whatsapp_url %}<a class="btn btn-whatsapp mt-4 w-full sm:w-auto" href="{{ contact.whatsapp_url }}" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp text-lg" aria-hidden="true"></i>Conversar no WhatsApp</a>{% endif %}
+        {% endif %}
+      </div>
+      {% elif my_request %}
+      <div class="rounded-2xl bg-warning-bg p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <h2 class="flex items-center gap-2 text-lg font-extrabold"><i class="fa-regular fa-clock text-warning" aria-hidden="true"></i>{% if my_request.status == "pending" %}Pedido enviado!{% else %}Seu pedido{% endif %}</h2>
+          {% include "partials/ui.html#status" with status=my_request.status %}
+        </div>
+        {% if my_request.status == "pending" %}<p class="mt-1 text-ink-muted">Agora é com quem divulgou. Você recebe um e-mail quando houver resposta.</p>{% endif %}
+        {% if can_withdraw %}
+        <form method="post" action="{% url 'adoption:withdraw' my_request.id %}" class="mt-4" data-confirm="Quem divulgou deixa de ver o seu pedido. Você pode pedir de novo depois." data-confirm-title="Cancelar seu pedido?" data-confirm-action="Cancelar pedido" data-confirm-dismiss="Manter pedido">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger"><i class="fa-solid fa-xmark" aria-hidden="true"></i>Cancelar pedido</button>
+        </form>
+        {% endif %}
+      </div>
+      {% elif pet.adopted %}
+      <div class="rounded-2xl bg-neutral-bg p-6">
+        <h2 class="flex items-center gap-2 text-lg font-extrabold"><i class="fa-solid fa-house text-neutral" aria-hidden="true"></i>{{ pet.name }} já encontrou um lar</h2>
+        <p class="mt-1 text-ink-muted">Que tal conhecer outros pets que ainda esperam?</p>
+        <a class="btn btn-primary mt-4" href="{% url 'adoption:board' %}">Ver pets</a>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+
+{% if can_request %}
+<div class="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white/95 p-3 backdrop-blur motion-safe:transition motion-safe:duration-200 md:hidden" data-sticky-cta>
+  <a class="btn btn-adopt w-full" href="#pedido"><i class="fa-solid fa-heart" aria-hidden="true"></i>Quero adotar {{ pet.name }}</a>
+</div>
+{% endif %}
+{% endblock %}

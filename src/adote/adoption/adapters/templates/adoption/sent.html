@@ -1,0 +1,34 @@
+{% extends "app.html" %}
+{% block title %}Meus pedidos{% endblock %}
+{% block content %}
+{% include "partials/ui.html#page-header" with eyebrow="Quero adotar" title="Meus pedidos" subtitle="Acompanhe cada pedido. Você recebe um e-mail quando houver resposta." %}
+{% if requests %}
+<ul class="card stagger overflow-hidden" role="list">
+  {% for item in requests %}
+  <li class="list-row">
+    <a href="{% url 'adoption:pet' item.pet.id %}" class="shrink-0"><img class="thumb pet-photo" src="{{ item.pet.photo.url }}" alt="Foto de {{ item.pet.name }}" loading="lazy"></a>
+    <div class="min-w-0 flex-1">
+      <div class="flex flex-wrap items-center gap-2">
+        <h2 class="text-lg font-bold"><a class="text-plum-900 no-underline hover:underline" href="{% url 'adoption:pet' item.pet.id %}">{{ item.pet.name }}</a></h2>
+        {% include "partials/ui.html#status" with status=item.status %}
+      </div>
+      <p class="text-sm text-ink-muted">{{ item.pet.breed }} · <time datetime="{{ item.requested_at|date:'c' }}" title="{{ item.requested_at|date:'d/m/Y H:i' }}">pedido em {{ item.requested_at|date:"d/m" }}</time></p>
+    </div>
+    <div class="sm:shrink-0">
+      {% if item.status == "pending" %}
+      <form method="post" action="{% url 'adoption:withdraw' item.id %}" data-confirm="Quem divulgou deixa de ver o seu pedido. Você pode pedir de novo depois." data-confirm-title="Cancelar seu pedido?" data-confirm-action="Cancelar pedido" data-confirm-dismiss="Manter pedido">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-xmark" aria-hidden="true"></i>Cancelar pedido</button>
+      </form>
+      {% elif item.status == "approved" %}
+      <a class="btn btn-primary btn-sm" href="{% url 'adoption:pet' item.pet.id %}"><i class="fa-solid fa-phone" aria-hidden="true"></i>Ver contato</a>
+      {% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+{% url 'adoption:board' as board_url %}
+{% include "partials/ui.html#empty" with icon="fa-heart" title="Você ainda não fez nenhum pedido" text="Quando um pet conquistar você, peça para adotar e acompanhe tudo por aqui." cta_url=board_url cta_label="Ver pets" %}
+{% endif %}
+{% endblock %}

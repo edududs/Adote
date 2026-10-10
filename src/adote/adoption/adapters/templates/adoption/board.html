@@ -1,0 +1,67 @@
+{% extends "app.html" %}
+{% block title %}Pets para adoção{% endblock %}
+{% block content %}
+{% url 'pets:publish' as publish_url %}
+{% include "partials/ui.html#page-header" with eyebrow="Quero adotar" title="Encontre seu novo melhor amigo" subtitle="Todos esperando um lar. Filtre por espécie, cidade ou jeitinho." action_url=publish_url action_label="Divulgar um pet" action_class="max-sm:hidden" %}
+
+{% with current=form.species.value|default:"" %}
+<nav class="mb-4 grid grid-cols-3 gap-2 sm:flex sm:flex-wrap" aria-label="Espécie">
+  <a class="tab" href="{% querystring species=None pagina=None %}"{% if not current %} aria-current="page"{% endif %}><i class="fa-solid fa-paw" aria-hidden="true"></i>Todos</a>
+  <a class="tab" href="{% querystring species="dog" pagina=None %}"{% if current == "dog" %} aria-current="page"{% endif %}><i class="fa-solid fa-dog" aria-hidden="true"></i>Cachorros</a>
+  <a class="tab" href="{% querystring species="cat" pagina=None %}"{% if current == "cat" %} aria-current="page"{% endif %}><i class="fa-solid fa-cat" aria-hidden="true"></i>Gatos</a>
+</nav>
+
+<details class="group mb-6 rounded-2xl border border-line bg-white shadow-soft" data-filters open>
+  <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-5 font-semibold text-plum-900 md:hidden [&::-webkit-details-marker]:hidden">
+    <span class="flex items-center gap-2"><i class="fa-solid fa-sliders text-teal-600" aria-hidden="true"></i>Mais filtros <span class="badge badge-available hidden"><span data-filter-count></span><span class="sr-only"> ativos</span></span></span>
+    <i class="fa-solid fa-chevron-down motion-safe:transition group-open:rotate-180" aria-hidden="true"></i>
+  </summary>
+  <form method="get" class="grid grid-cols-2 gap-x-3 px-4 pt-1 md:grid-cols-3 md:px-5 md:pt-5 lg:grid-cols-5" role="search" aria-label="Filtrar pets">
+    {% if current %}<input type="hidden" name="species" value="{{ current }}">{% endif %}
+    <div class="col-span-2 md:col-span-1">{{ form.breed.as_field_group }}</div>
+    {{ form.sex.as_field_group }}
+    {{ form.state.as_field_group }}
+    {{ form.city.as_field_group }}
+    {{ form.tag.as_field_group }}
+    <div class="col-span-2 flex items-center gap-2 pb-5 md:col-span-3 lg:col-span-5">
+      <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>Buscar</button>
+      <a class="btn btn-ghost" href="{% url 'adoption:board' %}">Limpar filtros</a>
+    </div>
+  </form>
+</details>
+{% endwith %}
+
+{% if page.object_list %}
+<p class="mb-4 text-sm text-ink-muted" aria-live="polite">{{ page.paginator.count }} pet{{ page.paginator.count|pluralize }} esperando um lar</p>
+<ul class="stagger grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" role="list">
+  {% for pet in page.object_list %}
+  {% partialdef pet-card inline %}
+  <li>
+    <article class="pet-card">
+      <div class="pet-card__media">
+        <img src="{{ pet.photo.url }}" alt="Foto de {{ pet.name }}" loading="lazy" class="pet-photo">
+        <span class="overlay-chip absolute top-3 left-3"><i class="fa-solid {% if pet.species == 'cat' %}fa-cat{% else %}fa-dog{% endif %}" aria-hidden="true"></i>{{ pet.get_species_display }}</span>
+        {% if pet.requested_by_me %}<span class="badge absolute bottom-3 left-3 bg-wine-600 text-white shadow-soft"><i class="fa-solid fa-heart" aria-hidden="true"></i>Você já pediu</span>{% endif %}
+      </div>
+      <div class="flex flex-1 flex-col gap-1 p-4">
+        <h2 class="text-xl font-bold"><a class="text-plum-900 no-underline after:absolute after:inset-0 after:content-['']" href="{% url 'adoption:pet' pet.id %}">{{ pet.name }}</a></h2>
+        <p class="text-sm text-ink-muted"><i class="fa-solid {% if pet.sex == 'female' %}fa-venus{% else %}fa-mars{% endif %} mr-1" aria-hidden="true"></i>{{ pet.get_sex_display }} · {{ pet.breed }}</p>
+        <p class="mt-auto pt-2 text-sm text-ink-muted"><i class="fa-solid fa-location-dot mr-1 text-wine-600" aria-hidden="true"></i>{{ pet.city }} - {{ pet.state }}</p>
+      </div>
+    </article>
+  </li>
+  {% endpartialdef %}
+  {% endfor %}
+</ul>
+{% if page.has_other_pages %}
+<nav class="mt-10 flex items-center justify-center gap-2" aria-label="Páginas">
+  {% if page.has_previous %}<a class="btn btn-outline" href="{% querystring pagina=page.previous_page_number %}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Anterior</a>{% endif %}
+  <span class="px-3 text-sm text-ink-muted">Página {{ page.number }} de {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a class="btn btn-outline" href="{% querystring pagina=page.next_page_number %}">Próxima<i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>{% endif %}
+</nav>
+{% endif %}
+{% else %}
+{% url 'adoption:board' as board_url %}
+{% include "partials/ui.html#empty" with icon="fa-magnifying-glass" title="Nenhum pet com esses filtros" text="Tente tirar um filtro ou buscar em outra cidade." cta_url=board_url cta_label="Limpar filtros" %}
+{% endif %}
+{% endblock %}

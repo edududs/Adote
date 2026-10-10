@@ -1,0 +1,17 @@
+{% load adote %}
+<div class="card overflow-hidden">
+  <div class="flex items-center gap-4 bg-plum-50 p-5 sm:p-6">
+    {% include "partials/ui.html#avatar" with person=person large=True %}
+    <div class="min-w-0">
+      <p class="truncate font-display text-xl font-extrabold text-plum-900">{{ person.get_full_name|default:person.username }}</p>
+      <p class="text-sm text-ink-muted">@{{ person.username }}{% if person.city %} · {{ person.city }}{% if person.state %} - {{ person.state }}{% endif %}{% endif %}</p>
+    </div>
+  </div>
+  <dl class="grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
+    <div class="flex gap-3"><i class="fa-solid fa-envelope mt-1 w-4 text-plum-500" aria-hidden="true"></i><div><dt class="eyebrow">E-mail</dt><dd class="break-all">{{ person.email|default:"—" }}</dd></div></div>
+    <div class="flex gap-3"><i class="fa-solid fa-phone mt-1 w-4 text-plum-500" aria-hidden="true"></i><div><dt class="eyebrow">Telefone</dt><dd>{{ person.phone|phone|default:"—" }}</dd></div></div>
+    <div class="flex gap-3"><i class="fa-solid fa-location-dot mt-1 w-4 text-plum-500" aria-hidden="true"></i><div><dt class="eyebrow">Cidade</dt><dd>{{ person.city|default:"—" }}{% if person.state %} - {{ person.state }}{% endif %}</dd></div></div>
+    <div class="flex gap-3"><i class="fa-solid fa-map mt-1 w-4 text-plum-500" aria-hidden="true"></i><div><dt class="eyebrow">Bairro</dt><dd>{{ person.neighborhood|default:"—" }}</dd></div></div>
+    <div class="flex gap-3 sm:col-span-2"><i class="fa-solid fa-quote-left mt-1 w-4 text-plum-500" aria-hidden="true"></i><div><dt class="eyebrow">Sobre</dt><dd>{{ person.about|default:"—"|linebreaksbr }}</dd></div></div>
+  </dl>
+</div>

@@ -1,0 +1,77 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: gate (SQLite)
+    runs-on: ubuntu-latest
+    env:
+      HYPOTHESIS_PROFILE: ci
+      ADOTE_REQUIRE_BROWSER: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --locked
+      # The browser tests (tests/e2e) must run here, never skip.
+      - run: uv run playwright install --with-deps chromium
+      # Same gate as `uv run poe check` locally: format, lint, types, tests with the coverage floor,
+      # migration drift and Django's deploy checklist. It reports; it never rewrites files.
+      - run: uv run poe check
+
+  assets:
+    name: stylesheet is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # The compiled CSS is versioned so the app runs without Node; it must match its source.
+      - run: npm run build:css
+      - run: git diff --exit-code -- src/adote/shared/adapters/static/adote/css/app.css
+
+  postgres:
+    name: tests (Postgres)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: adote
+          POSTGRES_USER: adote
+          POSTGRES_PASSWORD: adote
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U adote -d adote"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=10
+    env:
+      HYPOTHESIS_PROFILE: ci
+      # Production runs on Postgres: the row lock, the partial unique indexes and the
+      # case-insensitive e-mail constraint are proven there too, not only on SQLite.
+      TEST_DATABASE_URL: postgres://adote:adote@127.0.0.1:5432/adote
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run pytest --create-db -p no:cacheprovider -m "not e2e"

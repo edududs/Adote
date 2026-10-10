@@ -1,0 +1,25 @@
+{% load static %}<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Adote: encontre um pet para adotar ou divulgue um animal que precisa de lar.">
+  <meta name="theme-color" content="#2e1a2b">
+  <title>{% block title %}Adote{% endblock %} · Adote</title>
+  <link rel="icon" href="{% static 'adote/img/logo-small.png' %}">
+  <link rel="preload" href="{% static 'vendor/fontsource-inter-5.3.0/inter-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'adote/css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/fontawesome-7.3.1/css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/tom-select-2.6.2/tom-select.min.css' %}">
+  <link rel="stylesheet" href="{% static 'adote/css/app.css' %}">
+  <script src="{% static 'vendor/tom-select-2.6.2/tom-select.complete.min.js' %}" defer></script>
+  <script src="{% static 'adote/js/base.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a href="#conteudo" class="sr-only z-50 rounded-full bg-white px-4 py-2 focus:not-sr-only focus:fixed focus:top-3 focus:left-3">Pular para o conteúdo</a>
+  {% block body %}{% endblock %}
+  {% include "partials/_messages.html" %}
+  <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>

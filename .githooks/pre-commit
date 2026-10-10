@@ -1,0 +1,6 @@
+#!/bin/sh
+# Format check and lint only: seconds, not the full gate. The full gate (`uv run poe check`) runs in CI.
+set -e
+if git diff --cached --name-only --diff-filter=ACMR | grep -qE '\.(py|toml)$'; then
+  uv run poe lint
+fi

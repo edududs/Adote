@@ -1,0 +1,16 @@
+[pytest]
+minversion = "9.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = ["--strict-markers", "--strict-config", "--reuse-db"]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+filterwarnings = [
+    "error",
+    # The live server's request threads leave their SQLite connections to the garbage collector.
+    "ignore:unclosed database:ResourceWarning",
+    "ignore:Exception ignored while finalizing database connection:pytest.PytestUnraisableExceptionWarning",
+]
+markers = [
+    "e2e: drives the real pages in Chromium against a live server (tests/e2e)",
+    "contract: a port contract, run against the in-memory fake and the Django adapter alike",
+]

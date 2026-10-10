@@ -1,0 +1,38 @@
+{% extends "auth.html" %}
+{% block title %}Cadastro{% endblock %}
+{% block form_width %}max-w-xl{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-extrabold sm:text-3xl">Crie sua conta</h1>
+<p class="mt-1 mb-6 text-ink-muted">Leva dois minutos, e pode mudar uma vida.</p>
+<form method="post" action="{% url 'accounts:signup' %}" novalidate data-loading>
+  {% csrf_token %}
+  {% include "partials/ui.html#form-errors" %}
+  <fieldset>
+    <legend class="eyebrow mb-3">Sobre você</legend>
+    <div class="grid gap-x-4 sm:grid-cols-2">
+      {{ form.first_name.as_field_group }}
+      {{ form.last_name.as_field_group }}
+      {{ form.email.as_field_group }}
+      {{ form.phone.as_field_group }}
+      {{ form.postal_code.as_field_group }}
+      {{ form.state.as_field_group }}
+      {{ form.city.as_field_group }}
+      {{ form.neighborhood.as_field_group }}
+    </div>
+    {{ form.about.as_field_group }}
+  </fieldset>
+  <fieldset class="mt-2 border-t border-line pt-5">
+    <legend class="eyebrow mb-3 pt-5">Acesso</legend>
+    {{ form.username.as_field_group }}
+    <div class="grid gap-x-4 sm:grid-cols-2">
+      {{ form.password1.as_field_group }}
+      {{ form.password2.as_field_group }}
+    </div>
+  </fieldset>
+  <button type="submit" class="btn btn-primary mt-2 w-full sm:w-auto">
+    <span class="btn-label-idle"><i class="fa-solid fa-heart" aria-hidden="true"></i>Criar conta</span>
+    <span class="btn-label-busy"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>Criando…</span>
+  </button>
+</form>
+<p class="mt-6 text-center text-sm text-ink-muted">Já tem conta? <a href="{% url 'accounts:login' %}" class="font-semibold">Entrar</a></p>
+{% endblock %}

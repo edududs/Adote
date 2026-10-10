@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Erro 403{% endblock %}
+{% block body %}
+<main id="conteudo" class="flex min-h-dvh items-center justify-center px-4 py-12">
+  <div class="card card-pad flex max-w-lg flex-col items-center text-center motion-safe:animate-rise">
+    <div class="relative mb-6 flex size-30 items-center justify-center rounded-full bg-plum-50">
+      <i class="fa-solid fa-dog text-5xl text-plum-500" aria-hidden="true"></i>
+      <span class="absolute -right-1 bottom-2 flex size-10 items-center justify-center rounded-full bg-honey-400 text-plum-900 shadow-raised"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
+    </div>
+    <p class="eyebrow">Erro 403</p>
+    <h1 class="mt-1 text-2xl font-extrabold">Acesso negado</h1>
+    <p class="mt-2 text-ink-muted">Você não tem permissão para ver esta página.</p>
+    <div class="mt-4 flex gap-3 text-honey-400" aria-hidden="true"><i class="fa-solid fa-paw -rotate-12"></i><i class="fa-solid fa-paw translate-y-2 rotate-12 opacity-70"></i><i class="fa-solid fa-paw -rotate-12 opacity-40"></i></div>
+    <a class="btn btn-primary mt-6" href="/"><i class="fa-solid fa-paw" aria-hidden="true"></i>Ver pets para adoção</a>
+  </div>
+</main>
+{% endblock %}

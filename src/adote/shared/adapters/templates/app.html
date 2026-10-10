@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="min-h-dvh md:grid md:grid-cols-[16rem_1fr]">
+  {# Phone: a top bar opens the menu as a drawer. Wider: the menu is a sticky column. #}
+  <header class="on-dark sticky top-0 z-30 flex h-14 items-center justify-between bg-plum-900 px-4 text-white md:hidden">
+    <a href="{% url 'adoption:board' %}" class="flex items-center gap-2 font-display text-xl font-extrabold text-white no-underline">
+      <img src="{% static 'adote/img/logo.png' %}" alt="" width="32" height="32"><span>ADO<span class="text-honey-400">.</span>TE</span>
+    </a>
+    <button type="button" class="btn btn-icon btn-ghost-light border-0" data-open-dialog="app-drawer" aria-label="Abrir menu" aria-controls="app-drawer" aria-expanded="false">
+      <i class="fa-solid fa-bars text-lg" aria-hidden="true"></i>
+    </button>
+  </header>
+  <div class="paw-pattern on-dark hidden bg-plum-900 text-white md:block">
+    <div class="sticky top-0 flex h-dvh flex-col px-4 py-6">
+      {% include "partials/_nav.html" %}
+    </div>
+  </div>
+  <dialog id="app-drawer" class="drawer" aria-label="Menu">
+    <div class="paw-pattern on-dark flex h-full flex-col px-4 py-6 text-white">
+      <button type="button" class="btn btn-icon btn-ghost-light absolute top-3 right-3 border-0" data-close-dialog aria-label="Fechar menu">
+        <i class="fa-solid fa-xmark text-lg" aria-hidden="true"></i>
+      </button>
+      {% include "partials/_nav.html" %}
+    </div>
+  </dialog>
+
+  <main id="conteudo" class="mx-auto w-full max-w-7xl px-4 py-6 sm:px-8 sm:py-10">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<dialog id="confirm-dialog" class="dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+  <form method="dialog" class="p-6">
+    <h2 id="confirm-title" class="text-xl font-extrabold"></h2>
+    <p id="confirm-text" class="mt-2 text-ink-muted"></p>
+    <div class="mt-6 flex flex-wrap justify-end gap-2">
+      <button type="submit" value="cancel" class="btn btn-ghost" id="confirm-cancel">Voltar</button>
+      <button type="submit" value="ok" class="btn btn-danger" id="confirm-ok">Confirmar</button>
+    </div>
+  </form>
+</dialog>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "app.html" %}
+{% block title %}Quem quer adotar {{ adoption_request.pet.name }}{% endblock %}
+{% block content %}
+<a href="{% url 'adoption:received' %}" class="btn btn-ghost btn-sm mb-4 -ml-3"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i>Voltar para pedidos</a>
+<header class="page-header">
+  <div>
+    <p class="eyebrow mb-1">Pedido para {{ adoption_request.pet.name }}</p>
+    <h1 class="page-title">Conheça quem quer adotar {{ adoption_request.pet.name }}</h1>
+  </div>
+  {% include "partials/ui.html#status" with status=adoption_request.status %}
+</header>
+<div class="grid max-w-5xl gap-6 lg:grid-cols-[1fr_20rem]">
+  <div class="motion-safe:animate-rise">{% include "accounts/_profile_card.html" with person=adoption_request.adopter %}</div>
+  <aside class="space-y-4 motion-safe:animate-rise [animation-delay:80ms]">
+    <div class="card card-pad">
+      <h2 class="eyebrow mb-2">Mensagem</h2>
+      {% if adoption_request.message %}<p class="bubble">{{ adoption_request.message|linebreaksbr }}</p>{% else %}<p class="text-sm text-ink-muted">Sem mensagem.</p>{% endif %}
+    </div>
+    {% if adoption_request.status == "pending" %}
+    <div class="card card-pad flex flex-col gap-2">
+      <form method="post" action="{% url 'adoption:approve' adoption_request.id %}" data-confirm="Os outros pedidos para {{ adoption_request.pet.name }} serão recusados, e cada pessoa recebe um e-mail." data-confirm-title="Aprovar o pedido de {{ adoption_request.adopter.first_name|default:adoption_request.adopter.username }}?" data-confirm-action="Aprovar pedido" data-confirm-tone="primary">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary w-full"><i class="fa-solid fa-check" aria-hidden="true"></i>Aprovar pedido</button>
+      </form>
+      <form method="post" action="{% url 'adoption:reject' adoption_request.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger w-full"><i class="fa-solid fa-xmark" aria-hidden="true"></i>Recusar</button>
+      </form>
+    </div>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

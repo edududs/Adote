@@ -1,0 +1,35 @@
+{% extends "app.html" %}
+{% load static %}
+{% block title %}Painel{% endblock %}
+{% block scripts %}
+<script src="{% static 'vendor/chartjs-4.5.1/chart.umd.min.js' %}" defer></script>
+<script src="{% static 'adote/js/dashboard.js' %}" defer></script>
+{% endblock %}
+{% block content %}
+{% include "partials/ui.html#page-header" with eyebrow="Painel da comunidade" title="O que já fizemos juntos" subtitle="Cada número aqui é um bicho que saiu da rua ou está a caminho de um lar." %}
+<ul class="stagger grid grid-cols-2 gap-4 lg:grid-cols-4" role="list">
+  {% for tile in tiles %}
+  <li class="card card-pad">
+    <span class="mb-3 flex size-12 items-center justify-center rounded-full {{ tile.tint }}"><i class="fa-solid {{ tile.icon }} text-lg" aria-hidden="true"></i></span>
+    <p class="font-display text-4xl font-extrabold text-plum-900 tabular-nums"><span aria-hidden="true" data-count="{{ tile.value }}">{{ tile.value }}</span><span class="sr-only">{{ tile.value }}</span></p>
+    <p class="text-sm text-ink-muted">{{ tile.label }}</p>
+  </li>
+  {% endfor %}
+</ul>
+<section class="card card-pad mt-6 motion-safe:animate-rise [animation-delay:200ms]" aria-labelledby="por-raca">
+  <h2 id="por-raca" class="text-lg font-extrabold">Adoções por raça</h2>
+  <p class="mb-4 text-sm text-ink-muted">Raças com pelo menos uma adoção, das mais adotadas para as menos.</p>
+  {% if totals.adopted %}
+  <div class="chart-box relative" data-chart-box>
+    <canvas id="adoptions-by-breed" data-source="{% url 'adoption:dashboard_data' %}" role="img" aria-label="Gráfico de barras: adoções por raça" aria-describedby="adoptions-table"></canvas>
+  </div>
+  <table id="adoptions-table" class="sr-only">
+    <caption>Adoções por raça</caption>
+    <thead><tr><th scope="col">Raça</th><th scope="col">Adoções</th></tr></thead>
+    <tbody>{% for breed, count in by_breed %}<tr><th scope="row">{{ breed }}</th><td>{{ count }}</td></tr>{% endfor %}</tbody>
+  </table>
+  {% else %}
+  <p class="rounded-xl bg-sunken p-6 text-center text-ink-muted"><i class="fa-solid fa-seedling mr-2 text-success" aria-hidden="true"></i>Ainda não houve adoções. A primeira vai aparecer aqui.</p>
+  {% endif %}
+</section>
+{% endblock %}
